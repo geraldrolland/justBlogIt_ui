@@ -1,0 +1,7 @@
+.text-shadow {
+    text-shadow: 1px 1px 4px yellow , 2px 0px 2px gray;
+}
+
+.body-color {
+    background-color: #fdfdfc;
+}
