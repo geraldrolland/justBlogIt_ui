@@ -100,7 +100,7 @@ const LogIn = () => {
                 ease: "easeInOut",
 
             }}
-             className=' w-[50%] justify-center text-shadow items-center flex'>just</motion.span>
+             className=' w-[50%] justify-center text-shadow mt-3 text-[16px] font-semibold tracking-wider  flex font-mono '>just</motion.span>
             <motion.span
             animate={{
                 translateX: ["50px", "0", "0", "-25px",],
@@ -112,7 +112,7 @@ const LogIn = () => {
                 ease: "easeInOut",
 
             }}
-            className='w-[50%] flex justify-center text-shadow items-center'>BlogIt</motion.span></div>
+            className='w-[50%] -mt-3 flex justify-center text-shadow items-center font-semibold font-mono tracking-wider'>BlogIt</motion.span></div>
             <h1 className='w-[100px] flex flex-wrap text-gray-800 text-[25px] capitalize dark:text-gray-200 font-semibold'>hello,</h1>
             <h1 className='w-[200px] flex flex-wrap text-gray-800 text-[25px] capitalize dark:text-gray-200 font-semibold '>login now.</h1>
             <div className='w-[100%] h-[40px]  mt-2 flex justify-start space-x-4 items-center'>
@@ -122,7 +122,7 @@ const LogIn = () => {
             { isWrongEmailOrPassword ?
             <small className='text-red-600 w-[70%] left-[15%] border-1px flex justify-center items-center mt-2 mx-auto absolute'>Wrong email or password</small> : null
             }
-            <input ref={emailRef} className='w-[100%] h-[45px] rounded-md border-gray-800 focus:outline-none pl-4 dark:border-gray-400 mt-8 border-1px dark:text-gray-600 text-gray-800' onChange={(e) => {
+            <input ref={emailRef} maxLength={25} className='w-[100%] h-[45px] rounded-md border-1px dark:border-none border-gray-800 focus:outline-none pl-4 dark:border-gray-400 mt-8 dark:text-gray-800 text-[18px] text-gray-800' onChange={(e) => {
                 setIsWrongEmailOrPassword(false)
                 setLogInput({...logInPut, email: e.target.value})
                 checkInvalidInput()
@@ -137,11 +137,11 @@ const LogIn = () => {
                     <GoEyeClosed className=' text-[20px] cursor-pointer text-gray-900' />
                     </div>
                 </div>
-            <input ref={inputRef} onChange={(e) => {
+            <input maxLength={20} ref={inputRef} onChange={(e) => {
                 setIsWrongEmailOrPassword(false)
                 setLogInput({...logInPut, password: e.target.value})
                 checkInvalidInput()
-                }} className='w-[100%] h-[100%] rounded-md border-gray-800 focus:outline-none pl-4 dark:border-gray-400  border-1px dark:text-gray-600 text-gray-800' type="text" placeholder='Password' />
+                }} className='w-[100%] h-[100%] rounded-md border-1px dark:border-none border-gray-800 focus:outline-none pl-4 dark:border-gray-400 dark:text-gray-800 text-gray-800 text-[18px]' type="text" placeholder='Password' />
             </div>
             <small className='block mt-2 dark:text-gray-200 text-gray-600'><sup>*</sup>must contain atleast 8 characters, 1 uppercase and 1 special character</small>
             <button ref={ButtonRef} disabled={isDisable} onClick={() => handleLogIn()} className='w-[150px] h-[45px] dark:text-gray-300 font-semibold  transition-all duration-200 mx-auto flex justify-center items-center mt-4 text-gray-200  rounded-full space-x-2 capitalize bg-blue-800 '>

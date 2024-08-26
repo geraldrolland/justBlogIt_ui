@@ -9,7 +9,7 @@ const queryClient = new QueryClient()
 export const theme = createContext()
 function App() {
 
-  const [isDarkMode, setIsDarkMode] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
     const body = document.querySelector(".body")
