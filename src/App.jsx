@@ -9,18 +9,17 @@ const queryClient = new QueryClient()
 export const theme = createContext()
 function App() {
 
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(true)
 
   useEffect(() => {
-    const body = document.querySelector(".body")
     if (isDarkMode === true) {
-      body.classList.add("bg-gray-800")
-      body.classList.add("dark")
-      body.classList.remove("body-color")
+      document.body.classList.add("bg-gray-800")
+      document.body.classList.add("dark")
+      document.body.classList.remove("body-color")
     } else {
-      body.classList.add("body-color")
-      body.classList.remove("dark")
-      body.classList.remove("bg-gray-800")
+      document.body.classList.add("body-color")
+      document.body.classList.remove("dark")
+      document.body.classList.remove("bg-gray-800")
     }
 
     
@@ -32,14 +31,15 @@ function App() {
       setIsDarkMode
     }} 
      >
-    <div className='body'>
+    
     <QueryClientProvider client={queryClient}>
+    <div className='body w-[100%] h-[697px]'>
       <Routes>
         <Route path='sign-up' element={<SignUp/>} />
         <Route path='log-in' element={<LogIn/>} />
       </Routes>
-      </QueryClientProvider>
       </div>
+      </QueryClientProvider>
       </theme.Provider>
     </>
   )

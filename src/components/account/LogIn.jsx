@@ -86,9 +86,9 @@ const LogIn = () => {
         checkInvalidInput()
     }, [])
   return (
-    <div className='w-[100%] backdrop-filter  backdrop-blur-2xl h-[640px]  flex  items-center justify-center'>
-    <div className='w-[360px] dark:border-1px dark:border-gray-400 shadow-md rounded-md h-[530px]  flex justify-center item items-center'>
-        <div className='w-[90%] relative h-[90%] '>
+    <div className='w-[100%] h-[640px]  flex  items-center justify-center'>
+    <div className='lg:w-[360px] md:w-[400px] md:dark:border-1px  dark:border-gray-400 md:shadow-md  rounded-md h-[530px]  flex justify-center item items-center'>
+        <div className='md:w-[90%] relative md:h-[90%] h-[95%] w-[95%] '>
             <div className='w-[100px] h-[50px] overflow-x-hidden box-shadow bg-red-500 rounded-md dark:border-2px dark:border-gray-500   flex flex-wrap text-gray-200 dark:text-red-500 shadow-lg overflow-y-hidden items-center dark:bg-transparent   text-[20px]'><motion.span
             animate={{
                 translateX: ["-50px", "0px", "0px", "25px"],
@@ -122,7 +122,7 @@ const LogIn = () => {
             { isWrongEmailOrPassword ?
             <small className='text-red-600 w-[70%] left-[15%] border-1px flex justify-center items-center mt-2 mx-auto absolute'>Wrong email or password</small> : null
             }
-            <input ref={emailRef} maxLength={25} className='w-[100%] h-[45px] rounded-md border-1px dark:border-none border-gray-800 focus:outline-none pl-4 dark:border-gray-400 mt-8 dark:text-gray-800 text-[18px] text-gray-800' onChange={(e) => {
+            <input ref={emailRef} maxLength={30} className='w-[100%] h-[45px] rounded-md border-1px dark:border-none border-gray-800 focus:outline-none pl-4 dark:border-gray-400 mt-8 dark:text-gray-800 text-[18px] text-gray-800' onChange={(e) => {
                 setIsWrongEmailOrPassword(false)
                 setLogInput({...logInPut, email: e.target.value})
                 checkInvalidInput()
@@ -144,7 +144,7 @@ const LogIn = () => {
                 }} className='w-[100%] h-[100%] rounded-md border-1px dark:border-none border-gray-800 focus:outline-none pl-4 dark:border-gray-400 dark:text-gray-800 text-gray-800 text-[18px]' type="text" placeholder='Password' />
             </div>
             <small className='block mt-2 dark:text-gray-200 text-gray-600'><sup>*</sup>must contain atleast 8 characters, 1 uppercase and 1 special character</small>
-            <button ref={ButtonRef} disabled={isDisable} onClick={() => handleLogIn()} className='w-[150px] h-[45px] dark:text-gray-300 font-semibold  transition-all duration-200 mx-auto flex justify-center items-center mt-4 text-gray-200  rounded-full space-x-2 capitalize bg-blue-800 '>
+            <button ref={ButtonRef} disabled={isDisable} onClick={() => handleLogIn()} className='w-[150px] h-[45px] dark:text-gray-300 font-semibold cursor-pointer  transition-all duration-200 mx-auto flex justify-center items-center mt-4 text-gray-200  rounded-full space-x-2 capitalize bg-blue-800 '>
                 <h1>login </h1><LiaSignInAltSolid className='text-[25px]' />
             </button>
         </div>
