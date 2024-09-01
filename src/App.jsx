@@ -5,11 +5,15 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 import SignUp from "../src/components/account/SignUp"
 import LogIn from './components/account/LogIn'
 import "./styles/SignUp.css"
-const queryClient = new QueryClient()
+import BlogItemsPage from './components/home/BlogItemsPage'
+import PostList from './components/home/PostList'
+import UploadPage from './components/home/UploadPage'
+import NotificationPage from './components/home/NotificationPage'
+export const queryClient = new QueryClient()
 export const theme = createContext()
 function App() {
 
-  const [isDarkMode, setIsDarkMode] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
     if (isDarkMode === true) {
@@ -28,13 +32,20 @@ function App() {
     <>
     <theme.Provider
     value={{
-      setIsDarkMode
+      setIsDarkMode,
+      isDarkMode
     }} 
      >
     
     <QueryClientProvider client={queryClient}>
-    <div className='body w-[100%] h-[697px]'>
+    <div className='body w-[100%] h-[100%]'>
       <Routes>
+        <Route path='/' element={<BlogItemsPage/>}>
+        <Route index element={<PostList/>} />
+        <Route path='post-list/' element={<PostList/>} />
+        <Route path="notification" element={<NotificationPage/>} />    
+        <Route path="upload-post" element={<UploadPage/>} />
+        </Route>
         <Route path='sign-up' element={<SignUp/>} />
         <Route path='log-in' element={<LogIn/>} />
       </Routes>

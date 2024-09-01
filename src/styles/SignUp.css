@@ -5,3 +5,124 @@
 .body-color {
     background-color: #fdfdfc;
 }
+
+/* styles.css */
+.tab-container {
+    -ms-overflow-style: none;   /* Internet Explorer and Edge */
+    scrollbar-width: none;      /* Firefox */
+  }
+  
+  .tab-container::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, and Opera */
+  }
+
+  @keyframes slideSendAnimate {
+    0% {
+      transform: translateX(-50%);
+    }
+
+    50% {
+      transform: translateX(2%);
+    }
+
+    75% {
+      transform: translateX(-40%);
+    }
+
+    100% {
+      transform: translateX(0%);
+    }
+    
+  }
+
+  .sendAnimate {
+    animation: slideSendAnimate 0.5s ease-in-out;
+  }
+
+
+  @keyframes animateEmojis {
+    0% {
+      transform: translateY(-25px);
+    }
+
+    50% {
+      transform: translateY(0);
+    }
+
+    70% {
+      transform: translateY(-15px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+
+  }
+
+  .span2 {
+
+    animation: animateEmojis 0.5s ease-in-out;
+    animation-delay: 0.1s;
+  }
+
+  .span3 {
+
+    animation: animateEmojis 0.5s ease-in-out;
+    animation-delay: 0.2s;
+  }
+
+  .span1 {
+    animation: animateEmojis 0.5s ease-in-out;
+  }
+
+  @keyframes animateEmojiBox {
+    0% {
+      transform: translateY(10px) scaleX(0.8);
+    }
+
+    100% {
+      transform: translateY(0) scaleX(1.0);
+    }
+    
+  }
+
+  .animateBox {
+    animation: animateEmojiBox 0.1s ease-in-out;
+  }
+
+
+  .emoji1 {
+    animation: animateEmojis 0.5s ease-in-out;
+    
+  }
+
+  .emoji2 {
+    animation: animateEmojis 0.5s ease-in-out;
+    animation-delay: 0.1s;
+  }
+
+  .emoji3 {
+    animation: animateEmojis 0.5s ease-in-out;
+    animation-delay: 0.2s;
+  }
+
+  .emoji4 {
+    animation: animateEmojis 0.5s ease-in-out;
+    animation-delay: 0.3s;
+  }
+
+  .emoji5 {
+    animation: animateEmojis 0.5s ease-in-out;
+    animation-delay: 0.4s;
+  }
+
+  .emoji6 {
+    animation: animateEmojis 0.5s ease-in-out;
+    animation-delay: 0.5s;
+  }
+
+  .emoji7 {
+    animation: animateEmojis 0.5s ease-in-out;
+    animation-delay: 0.1s;
+  }
+
