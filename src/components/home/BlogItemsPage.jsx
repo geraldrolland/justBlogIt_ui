@@ -17,23 +17,25 @@ import hot2 from "../../assets/images/hot2.jpg"
 import poster from "../../assets/images/poster.jpg"
 import { FaPeopleGroup } from "react-icons/fa6";
 import { IoPeople } from "react-icons/io5";
+import { IoHomeOutline } from "react-icons/io5";
+import { FaRegBell } from "react-icons/fa6";
+import { BsSend } from "react-icons/bs";
+import useStore from '../customhooks/UseStore';
+import "../../styles/SignUp.css"
+
 const BlogItemsPage = () => {
 
-
+    const postListRef = useStore(state => state.postListRef) 
+    const {isScrollTop} = useContext(theme)
+    const menuRef = useRef(null)
     const searchInputRef = useRef(null)
     const fetchPosts = async () => {
-        try {
-            const response = await axios.get("")
+            const response = await axios.get('https://dummyjson.com/posts')
             return response.data
-        }
-        catch(error) {
-            return error
-        }
     }
 
     const containerRef = useRef(null)
-
-    const {data, isPending, isError, refetch} = useQuery({
+    const {data, isPending, isError, refetch, isSuccess} = useQuery({
         queryKey: ["search-post"],
         queryFn: fetchPosts,
         initialData: () => {
@@ -43,44 +45,20 @@ const BlogItemsPage = () => {
         enabled: false
     })
 
+
   
     const searchPost = () => {
 
-        if (data) {
-            
-            const post1 = {
-                title : "hello how are you",
-                author: "mike",
-                image: "https://unsplash.com/photos/man-wearing-maroon-v-neck-t-shirt-in-forest-agGIKYs4mYs"
-            }
-            const post2 = {
-                title : "i just wanna go home",
-                author: "ana",
-                image: "https://unsplash.com/photos/man-sitting-near-gray-steel-roller-shutters-during-daytime-Nm70URdtf3c"
-            }
-            const post3 = {
-                title : "are you there",
-                author: "sam",
-                image: hot2
-            }
-            const post4 = {
-                title : "closer to you",
-                author: "tee",
-                image: "https://unsplash.com/photos/beautiful-young-woman-keeping-hands-in-hair-and-eyes-closed-while-standing-against-brown-background-czussVbYOj0"
-            }
-
-            const post5 = {
-                title : "are we there",
-                author: "mathewee",
-                image: hot1
-            }
-            const data = [post1, post2, post3, post4, post5]
+        if (isSuccess) {
             if (data) {
+                const posts = data.posts
             if (containerRef.current) {
                 containerRef.current.style.display = "flex"
                 containerRef.current.innerHTML = ""
             }
-                data.forEach(post => {
+
+            if (posts) {
+                posts.forEach(post => {
                     if (post.title.startsWith(searchInputRef.current.value)) {
                         console.log("error1")
                         const div = document.createElement("div")
@@ -90,20 +68,53 @@ const BlogItemsPage = () => {
                         const span2 = document.createElement("span")
                         const name = document.createElement("h1")
                         name.className = "dark:text-blue-300 truncate  text-blue-400 truncate w-[65px]"
-                        name.innerHTML = post.author
+                        name.innerHTML = post.author ? post.author : "Onyeka"
                         span1.className = "text-[18px] text-blue-500 capitalize tracking-wide"
                         span1.innerHTML = "Title - "
-                        span2.className = "text-[16px]  inline-block ml-1 dark:text-gray-300 text-gray-600 tracking-tight"
+                        span2.className = "text-[16px]  inline-block ml-1 dark:text-gray-300 text-gray-600 truncate tracking-tight"
                         span2.innerHTML = post.title
                         div.className = "w-[100%] dark:shadow-2xl backdrop-filter backdrop-blur-lg shadow-md cursor-pointer hover:border-blue-500 transition-all duration-300 border-1px h-[50px] rounded-md flex justify-between dark:border-none mt-1 items-center"
                         h1.className="h-[100%] pl-2  flex items-center w-[60%] tracking-tight font-semibold text-gray-70 dark:text-gray-300 truncate"
                         h1.appendChild(span1)
                         h1.appendChild(span2)
+                        div.id = post.id
+                        h1.id = post.id
+                        span1.id = post.id
+                        span2.id = post.id
+                        image.id = post.id
+                        div.addEventListener("click", (event) => {
+                            
+                            let posts = postListRef.children;
+                            posts = Array.from(posts);
+                            console.log("fuction called")
+                            console.log(typeof(event.target.id))
+                            console.log("e id", event.target.id)
+                            for (let post of posts) {
+                                console.log("this from posts", post.id)
+                                console.log(typeof(post.id))
+                                if (post.id === event.target.id) {
+                                    post.scrollIntoView({ behavior: "smooth", block: "start" });
 
+                                    const observer = new IntersectionObserver(entries => {
+                                        entries.forEach(entry => {
+                                            if (entry.isIntersecting) {
+                                                entry.target.classList.add("animatePost")
+                                                
+                                            } else {
+                                                entry.target.classList.remove("animatePost")
+                                            }
+                                        })
+                                    }, {
+                                        threshold: 0.5,
+                                    })
+
+                                    observer.observe(post)
+                                }
+                            }
+                        });
                         image.className ="bg-cover shadow-md mr-2 rounded-full h-[35px] w-[35px]"
                         image.alt = post.title
-                        image.src = post.image 
-                        console.log(post.image)
+                        image.src = post.image ? post.image : "" 
                         div.appendChild(h1)
                         div.appendChild(name)
                         div.appendChild(image)
@@ -111,7 +122,7 @@ const BlogItemsPage = () => {
                         containerRef.current.appendChild(div)
                     }
 
-                });
+                });}
 
                 if (containerRef.current.innerHTML === "") {
                     console.log("f")
@@ -137,6 +148,17 @@ const BlogItemsPage = () => {
 
         "moveLeft": {
             translateX: "0"
+        },
+
+        onDarkNob: {
+            backgroundColor: "white"
+        },
+        onDarkBg: {
+            backgroundColor: "black"
+        },
+
+        onLightNob: {
+            backgroundColor: "black"            
         }
     }
 
@@ -174,11 +196,11 @@ const BlogItemsPage = () => {
 
   return (
     <>
-      <div onClick={() => hideDisplaySearchResult()} className='w-[100%]  relative items-center h-[10%] lg:h-[60px]  flex justify-between lg:justify-center lg:space-x-40'>
-        <div className='lg:w-[500px] ml-1 md:w-[50%]  flex justify-between items-center  w-[100%]  h-[45px] '>
-            <div className='md:w-[100px] h-[100%]  flex flex-col md:shadow-md justify-center dark:border-1px dark:border-red-500 w-[25%] rounded-[4px] md:rounded-md  dark:bg-transparent bg-red-500 items-center'>
-                <span className=' md:tracking-wider tracking-tight text-gray-100 font-mono text-[18px] dark:text-red-500  justify-center text-shadow items-center flex font-semibold'>just</span>
-                <span className='flex justify-center text-shadow items-center font-semibold font-mono md:tracking-wider tracking-tight text-[20px] text-gray-100 dark:text-red-500 -mt-3'>BlogIt</span>
+      <div onClick={() => hideDisplaySearchResult()} className='w-[100%] mb-3  md:mb-0  relative items-center h-[10%] lg:h-[60px]  flex justify-between lg:justify-center lg:space-x-40'>
+        <div className='lg:w-[500px] md:ml-1 md:w-[50%]  flex justify-between items-center  w-[100%]  h-[45px] '>
+            <div className='md:w-[100px] h-[100%]  flex flex-col md:shadow-md justify-center md:dark:border-1px  dark:border-red-500 w-[25%] rounded-sm md:rounded-md  dark:bg-transparent bg-red-500 items-center'>
+                <span className=' md:tracking-wider  text-gray-100 font-mono text-[18px] dark:text-red-500  justify-center text-shadow items-center flex font-semibold'>just</span>
+                <span className='flex justify-center text-shadow items-center font-semibold font-mono md:tracking-wider  text-[20px] text-gray-100 dark:text-red-500 -mt-3'>BlogIt</span>
             </div>
             <div className='lg:w-[350px] w-[70%] md:w-[320px] border-1px dark:border-none rounded-[4px] border-gray-600 relative h-[100%]  justify-center flex items-center'>
                 <div className='w-[50px] absolute left-0 h-[100%]  flex justify-center items-center'>
@@ -186,7 +208,7 @@ const BlogItemsPage = () => {
                 </div>
                 <input onChange={() => {
                     handleSearchInput()
-                }} ref={searchInputRef} onFocus={() => refetch()} className='w-[100%] h-[100%] border-gray-800 text-[18px] pl-[60px] dark:bg-gray-100 rounded-[3px] dark:text-gray-400 focus:outline-none' type="text" placeholder='search post by title ....' />
+                }} ref={searchInputRef} onFocus={() => refetch()} className='w-[100%] h-[100%] border-gray-800  text-[18px] pl-[45px] md:pl-[60px] dark:bg-gray-300 md:dark:bg-gray-100 rounded-[3px] dark:text-gray-500  focus:outline-none' type="text" placeholder='search post by title ....' />
 
             </div>
         </div>
@@ -238,16 +260,8 @@ const BlogItemsPage = () => {
                     <IoIosArrowDown className='dark:text-gray-300' />
                 </button>
             </div>
-            <div className='lg:w-[85px] w-[70px] p-1 flex shadow-lg -inset-2 dark:bg-gray-950 dark:border-none  items-center h-[35px] rounded-full mr-1'>
-                <motion.button
-                variants={variant}
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                animate={isDarkMode ? "moveRight" : "moveLeft"}
-                transition={{
-                    duration: 0.3,
-                    ease: "easeInOut",
-                }}
-                className='w-[30px] border-8px border-gray-800 dark:bg-gray-950 dark:border-gray-100 shadow-2xl h-[30px]  rounded-full'></motion.button>
+            <div onClick={() => setIsDarkMode(!isDarkMode)} className='w-[70px]  flex shadow-lg -inset-2 dark:bg-gray-950 cursor-pointer transition-all duration-300  dark:border-none bg-gray-400 justify-center items-center h-[35px] rounded-full lg:mr-0 md:mr-1'>
+                <div className='w-[27px] transition-all duration-300 h-[27px] transform translate-x-[-50%] dark:translate-x-[50%] dark:bg-gray-300 bg-gray-800  rounded-full'></div>
             </div>
         </div>
         { isShowProfile ?
@@ -320,7 +334,55 @@ const BlogItemsPage = () => {
             <div className='md:w-[550px] w-[100%] h-[100%] overflow-hidden  '>
                 <Outlet/>
             </div>
-        </div>  
+        </div>
+        {
+            createPortal(
+            <motion.div
+            animate={isScrollTop ? {
+                translateY: "0px"
+            } : {
+                translateY: "100px"
+            }} 
+
+            transition={{
+                duration: 0.2,
+                ease: "easeInOut"
+            }}
+            className='md:hidden backdrop-filter  backdrop-blur-lg shadow-md rounded-l-[20px] rounded-r-[20px] w-[100%] fixed z-10 bottom-0 right-0 h-[50px] dark:border-1px flex justify-evenly items-center'>
+                <div className='w-[50px] relative flex justify-center text-gray-700  dark:text-gray-300 items-center text-[30px] h-[100%] '>
+                    <div className='absolute 
+                    rounded-full bg-red-600 right-[7px] top-2
+                    h-[12px] w-[12px] '></div>
+                <IoHomeOutline />  
+                </div>
+                <motion.div
+                animate={{
+                    rotate: ["-15deg", "15deg", "-10deg", "10deg", "-5deg", "5deg", "0"]
+                }} 
+
+                transition={{
+                    duration: 0.5,
+                    ease: "easeInOut",
+                    
+                }}
+                className='w-[50px] relative flex justify-center items-center dark:text-gray-300 text-gray-700 text-[30px] h-[100%] '>
+                <div className='absolute 
+                    rounded-full bg-red-600 right-[7px] top-2
+                    h-[12px] w-[12px] '></div>
+                <FaRegBell />  
+                </motion.div>
+                <div className='w-[65px] shadow-md bg-gray-200 flex justify-center items-center -mt-[28px] rounded-full text-[30px] h-[65px] text-gray-900 '>
+                <BsSend  />  
+                </div>
+                <div className='w-[50px] flex justify-center items-center text-[30px] h-[100%] '>
+                <img className='w-[45px] h-[45px] border-2px border-green-600 object-contain rounded-full' src={poster} alt="" />  
+                </div>
+                <div 
+                className='w-[70px]  flex justify-center bg-gray-400 dark:bg-gray-950 items-center rounded-full transition-all duration-300   h-[40px] ' onClick={() => setIsDarkMode(!isDarkMode)}>
+                  <div className='w-[30px] transform transition-all duration-300 dark:bg-gray-100 shadow-lg translate-x-[50%] dark:translate-x-[-50%] bg-gray-800 h-[30px] rounded-full '></div>
+                </div>
+            </motion.div>, document.getElementById("menu-root"))
+        }  
     </>
   )
 }

@@ -3,13 +3,12 @@ import React from 'react'
 const Reply = () => {
   return (
     <div className='w-[100%] flex flex-col'>
-      <div className='w-[100%] flex justify-between items-center h-[40px] '>
+      <div className='w-[100%] flex justify-between items-center h-[40px] space-x-2 border-1px '>
          <img className='w-[40px] h-[40px] border-1px rounded-full' src="" alt="" />
          <div className='w-[410px] flex justify-between items-center h-[100%] '>
           <div className='w-[320px] flex flex-col justify-center items-start h-[100%] '>
           <h1 className='dark:text-gray-400 text-gray-800  text-[16px]'>Onyeka Gerald Ujowundu</h1>
-          <h1 className='w-[100%] text-gray-500 -mt-1 md:-mt-2 tracking-tight dark:text-gray-300 text-[12px] '>I love to code and play games</h1>
-            
+          <h1 className='w-[100%] text-gray-500 -mt-1 md:-mt-2 tracking-tight dark:text-gray-300 text-[12px] '>I love to code and play games</h1>            
           </div>
           <div className='w-[60px] h-[100%] flex justify-center'>
           <h1 className='text-gray-400 tracking-wide text-[15px]'>now</h1>

@@ -243,15 +243,15 @@ const Post = ({post}) => {
     }, [])
 
   return (
-    <div className='w-[100%] flex flex-col flex-wrap border-b-1px mb-4'>
-        <div className='w-[100%] md:h-[80px] flex justify-between h-[60px] items-center  rounded-md md:shadow-md '>
+    <div id={post.id} className='w-[100%] transition-all duration-300 flex flex-col flex-wrap border-b-1px mb-4 rounded-lg'>
+        <div  className='w-[100%]  md:h-[80px] flex justify-between h-[60px] items-center  rounded-md md:shadow-md '>
             <img className='md:w-[80px] w-[60px] h-[60px] md:h-[80px] border-1px rounded-full bg-cover' src="" alt="" />
             <div className='w-[420px] h-[100%]  px-2 rounded-md'>
                 <div className='w-[100%] mt-1 justify-between items-center h-[18px] md:h-[26px]  flex text-gray-200'>
                    <h1 className='w-[200px] dark:text-gray-300  text-gray-600 font-semibold truncate'>
                    Onyeka Ujowundu Gerald
                     </h1>
-                        <button ref={followRef} onClick={() => handleFollow()} className='h-[100%] dark:border-1px dark:rounded-lg md:tracking-wide text-blue-400 font-semibold w-[100px] '>
+                        <button ref={followRef} onClick={() => handleFollow()} className='h-[100%]  dark:rounded-lg md:tracking-wide text-blue-400 font-semibold w-[100px] '>
                         + Follow
                         </button> 
                 </div>
@@ -266,34 +266,25 @@ const Post = ({post}) => {
                 </div>
             </div>
         </div>
-        <div className='w-[100%] mt-2 h-[30px] flex justify-start space-x-1 items-center'>
-        <h1 className='text-gray-600 text-[18px] md:text-[20px] tracking-wide'>Title</h1>
-        <div className='md:w-[10px] w-[6px] h-[6px] bg-gray-400 md:h-[10px] rounded-full'></div>
-        <h1 className='text-gray-500 tracking-tight md:tracking-wide capitalize'>10 ways to become a software engineer</h1>
+        <div className='w-[100%]  mt-2 h-[30px] flex justify-start space-x-1 items-center'>
+        <h1 className='text-gray-600 dark:text-gray-400 text-[18px] md:text-[20px] tracking-wide'>Title</h1>
+        <div className='md:w-[10px] w-[6px] h-[6px] bg-gray-400 dark:bg-gray-600 md:h-[10px] rounded-full'></div>
+        <h1 className='text-gray-500 dark:text-gray-400 tracking-tight md:tracking-wide capitalize w-[80%] truncate'>{post.title}</h1>
         </div>
-        <h1 ref={textBoxRef}className='w-[100%] mt-2  whitespace-break-spaces flex flex-wrap overflow-y-hidden rounded-[4px] tracking-tight border-1px text-gray-800 dark:text-gray-300 p-1 text-[15px]'>
-        Lorem ipsum dolor sit amet, consectetur adipiscing 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et elit. Sed do eiusmod tempor incididunt ut labore et
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et 
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et   
+        <h1 ref={textBoxRef}className='w-[100%] mt-2  whitespace-break-spaces flex flex-wrap overflow-y-hidden rounded-[4px] tracking-tight border-1px text-gray-800 dark:text-gray-300 p-1 text-[15px]'>{post.body} 
         </h1>
         <h1 ref={showMoreRef}  onClick={() => expandTextBox()}  className='text-blue-500
-          hidden  ml-[80%] tracking-wide  jus dark:text-blue-700 md:ml-[470px]'>... more</h1>
+          hidden  ml-[80%] cursor-pointer tracking-wide  jus dark:text-blue-700 md:ml-[470px]'>... more</h1>
         <img className='w-[100%]  rounded-[4px] border-1px mt-4 h-[500px]' src="" alt="" />
-        <div className='w-[95%] h-[40px] dark:border-transparent border-gray-500 flex justify-between items-center border-b-1px mx-auto mt-2'>
-            <div className='w-[230px]  h-[30px] flex items-center justify-between'>
-                {
-
-                }
+        <div className='w-[95%] h-[40px] dark:border-transparent border-gray-500 flex space-x-2 justify-start items-center border-b-1px mx-auto mt-2'>
+            <div className='w-[55px]  text-[14px] font-semibold h-[30px] flex items-center justify-center space-x-1'>
+                    <span className='proportional-nums dark:text-gray-400 text-gray-600 '>{post.reactions.likes}</span>
+                <span className='text-blue-700  dark:text-blue-500 block'>{post.reactions.likes === 1 ? "Like" : "Likes"}</span>
             </div>
-            <div className='w-[170px] h-[30px] border-1px flex justify-center items-center'>
-                <h1 className='dark:text-gray-200 text-gray-700 text-[14px]'>54 comments</h1>
+            <div className='w-[8px] h-[8px] rounded-full dark:bg-gray-600 bg-gray-500'></div>
+            <div className='w-[100px] space-x-1 h-[30px]  flex justify-start items-center text-[14px]'>
+            <span className='proportional-nums font-semibold dark:text-gray-400  text-gray-600 '>{post.reactions.likes}</span>
+            <span className='text-blue-600 font-semibold  dark:text-blue-400 block'>{post.reactions.likes === 1 ? "Comment" : "Comments"}</span>
             </div>
         </div>
         <div className='md:w-[80%] w-[100%]  h-[35px] flex md:justify-start mb-4 items-center justify-evenly md:space-x-6 mx-auto mt-4'>
@@ -305,10 +296,10 @@ const Post = ({post}) => {
                     <span onClick={() => like("span2")} id='span2' className='inline-block span2 md:text-[30px] text-[25px] text-red-600 transform duration-300 hover:-translate-y-3 hover:scale-125  '>  &#10084;</span>
                     <span onClick={() => like("span3")} id='span3' className='inline-block transform hover:-translate-y-3  duration-300 hover:scale-125   span3 text-[25px] md:text-[30px]'>&#128077;</span>
                     </div>
-                    <div ref={likeContainerRef} onClick={() => {unlike()}} className='absolute top-0 right-0 bg-gray-300 pt-1  border-1px h-[100%]  w-[100%] flex pb-1 justify-center items-center text-[30px] rounded-full'></div>
+                    <div ref={likeContainerRef} onClick={() => {unlike()}} className='absolute top-0 right-0 bg-gray-300 pt-1 dark:bg-transparent dark:border-1px  border-1px h-[100%]  w-[100%] flex pb-1 justify-center items-center text-[30px] rounded-full'></div>
                     <div ref={unlikeContainerRef} className='w-[100%] dark:bg-transparent relative bg-gray-500 dark:border-1px rounded-full h-[100%] flex justify-center items-center md:space-x-2 space-x-1'>
                     <BiLike className='text-gray-200 text-[25px] md:text-[30px]' />
-                    <h1 className='text-gray-200 '><h1 className='flex justify-center items-center  tracking-wide'>Likes</h1></h1>
+                    <h1 className='text-gray-200 '><h1 className='flex justify-center items-center  tracking-wide'>Like</h1></h1>
                     </div>
 
             </div>
@@ -321,7 +312,7 @@ const Post = ({post}) => {
                     Comments
                 </h1>
             </div>
-            <button className='h-[100%] rounded-full flex justify-center items-center w-[110px]  bg-gray-500'>
+            <button className='h-[100%] rounded-full flex justify-center dark:bg-transparent dark:border-1px items-center w-[110px]  bg-gray-500'>
                 <BiRepost className='text-gray-200 text-[30px]' />
                 <h1 className=' text-gray-200 capitalize'>repost</h1>
             </button>

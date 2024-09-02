@@ -9,11 +9,13 @@ import BlogItemsPage from './components/home/BlogItemsPage'
 import PostList from './components/home/PostList'
 import UploadPage from './components/home/UploadPage'
 import NotificationPage from './components/home/NotificationPage'
+
 export const queryClient = new QueryClient()
 export const theme = createContext()
 function App() {
 
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [isScrollTop, setIsScrollTop] = useState(false)
 
   useEffect(() => {
     if (isDarkMode === true) {
@@ -33,7 +35,9 @@ function App() {
     <theme.Provider
     value={{
       setIsDarkMode,
-      isDarkMode
+      isDarkMode,
+      setIsScrollTop,
+      isScrollTop,
     }} 
      >
     

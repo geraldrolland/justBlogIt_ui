@@ -177,8 +177,8 @@ const Comment = () => {
   textArea.style.height = "56px"
   }, [])
   return (
-    <div className='w-[100%] rounded-md bg-amber-50 flex flex-wrap  flex-col relative'>
-      <div className='w-[100%] h-[50px]   flex justify-between items-center'>
+    <div className='w-[100%]   rounded-md  flex flex-wrap  flex-col relative'>
+      <div className='w-[100%]  h-[50px]   flex justify-between items-center'>
         <img className='w-[50px] h-[50px] border-1px rounded-full md:shadow-md' src="" alt="" />
         <div className='md:w-[480px] w-[80%]  h-[100%]  flex justify-between items-center'>
           <div className='flex justify-center items-start  h-[100%] flex-col  w-[250px]'>

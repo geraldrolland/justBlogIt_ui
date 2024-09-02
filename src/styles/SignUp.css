@@ -126,3 +126,47 @@
     animation-delay: 0.1s;
   }
 
+@keyframes animatePostHightlight {
+  0% {
+    background-color:  rgba(85, 143, 85, 0.2)
+  } 
+  
+  10% {
+    background-color: rgba(85, 143, 85, 0.2);
+  }
+
+  20% {
+    background-color: rgba(85, 143, 85, 0.2)
+  }
+
+  30% {
+    background-color: rgba(85, 143, 85, 0.2)
+  }
+
+  40% {
+    background-color: rgba(85, 143, 85, 0.2)
+  }
+
+  50% {
+    background-color: rgba(85, 143, 85, 0.2)
+  }
+
+  60% {
+    background-color: rgba(85, 143, 85, 0.2)
+  }
+
+  70% {
+    background-color: rgba(85, 143, 85, 0.2)
+  }
+
+  80% {
+    background-color: rgba(85, 143, 85, 0.2)
+  }
+
+  
+}
+
+
+.animatePost {
+  animation: animatePostHightlight 3s ease-in-out;
+}
