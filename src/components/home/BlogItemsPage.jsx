@@ -141,26 +141,7 @@ const BlogItemsPage = () => {
         }
     }
 
-    const variant = {
-        "moveRight": {
-            translateX: "100%"
-        },
 
-        "moveLeft": {
-            translateX: "0"
-        },
-
-        onDarkNob: {
-            backgroundColor: "white"
-        },
-        onDarkBg: {
-            backgroundColor: "black"
-        },
-
-        onLightNob: {
-            backgroundColor: "black"            
-        }
-    }
 
     const [isShowProfile, setIshowProfile] = useState(false)
     const {
@@ -169,7 +150,7 @@ const BlogItemsPage = () => {
     } = useContext(theme)
     const activeClass = ({isActive}) => {
         return {
-            borderColor: isActive ? isDarkMode ? "white" : "gray" : "",
+            borderColor: isActive ? isDarkMode ? "white" : "gray" : "transparent",
             
         }
 
@@ -281,9 +262,9 @@ const BlogItemsPage = () => {
                         </div>
                     </div>
                     <div className='h-[130px] shadow-md mt-[20px] rounded-lg w-[100%] border-1px'>
-                        <button className='w-[150px] h-[35px]  mt-4 text-blue-500 hover:border-none hover:bg-gray-400 hover:text-blue-800 transition-all duration-200  mx-auto border-2px dark:border-none border-gray-500 rounded-full block dark:bg-gray-900'>
+                        <NavLink to={"/user-profile"} className='w-[150px] h-[35px] flex justify-center items-center  mt-4 text-blue-500 hover:border-none hover:bg-gray-400 hover:text-blue-800 transition-all duration-200  mx-auto border-2px dark:border-none border-gray-500 rounded-full  dark:bg-gray-900'>
                             View Profile
-                        </button>
+                        </NavLink>
                         <button className='w-[90px] h-[30px] border-2px mx-auto block mt-2 rounded-lg text-red-500  font-semibold border-blue-300 capitalize hover:shadow-md active:shadow-none transition-all transform hover:scale-105'>
                             log out
                         </button>
@@ -293,7 +274,7 @@ const BlogItemsPage = () => {
 
         { 
             createPortal( 
-                <div ref={containerRef} className='md:w-[330px] w-[100%] fixed md:top-[60px]   shadow-md md:ml-[125px] lg:ml-[200px]  dark:bg-gray-900 transition-all duration-300 rounded-md flex flex-col flex-wrap justify-between items-center '>
+                <div ref={containerRef} className='md:w-[330px] w-[100%] fixed md:top-[60px] shadow-md md:ml-[125px] border-1px lg:ml-[200px] top-[50px]  dark:bg-gray-900 transition-all duration-300 rounded-md flex flex-col flex-wrap backdrop-filter backdrop-blur-md justify-between items-center '>
                 </div>, document.getElementById("search-root")) 
         }
         </div>
@@ -349,12 +330,13 @@ const BlogItemsPage = () => {
                 ease: "easeInOut"
             }}
             className='md:hidden backdrop-filter  backdrop-blur-lg shadow-md rounded-l-[20px] rounded-r-[20px] w-[100%] fixed z-10 bottom-0 right-0 h-[50px] dark:border-1px flex justify-evenly items-center'>
-                <div className='w-[50px] relative flex justify-center text-gray-700  dark:text-gray-300 items-center text-[30px] h-[100%] '>
+                <NavLink to={"/"} style={activeClass} className='w-[50px] relative flex justify-center text-gray-700  dark:text-gray-300 border-b-3px rounded-md items-center text-[30px] h-[100%] '>
                     <div className='absolute 
                     rounded-full bg-red-600 right-[7px] top-2
                     h-[12px] w-[12px] '></div>
                 <IoHomeOutline />  
-                </div>
+                </NavLink>
+                <NavLink to={"/notification"} style={activeClass}  className='w-[50px] rounded-md border-b-3px  h-[100%]'>
                 <motion.div
                 animate={{
                     rotate: ["-15deg", "15deg", "-10deg", "10deg", "-5deg", "5deg", "0"]
@@ -367,19 +349,20 @@ const BlogItemsPage = () => {
                 }}
                 className='w-[50px] relative flex justify-center items-center dark:text-gray-300 text-gray-700 text-[30px] h-[100%] '>
                 <div className='absolute 
-                    rounded-full bg-red-600 right-[7px] top-2
+                    rounded-full  bg-red-600 right-[7px] top-2
                     h-[12px] w-[12px] '></div>
                 <FaRegBell />  
                 </motion.div>
-                <div className='w-[65px] shadow-md bg-gray-200 flex justify-center items-center -mt-[28px] rounded-full text-[30px] h-[65px] text-gray-900 '>
+                </NavLink>
+                <NavLink to={"/upload-post"} style={activeClass}  className='w-[65px] border-b-3px shadow-md bg-gray-200 flex justify-center items-center -mt-[28px] rounded-full text-[30px] h-[65px] text-gray-900 '>
                 <BsSend  />  
-                </div>
+                </NavLink>
                 <div className='w-[50px] flex justify-center items-center text-[30px] h-[100%] '>
                 <img className='w-[45px] h-[45px] border-2px border-green-600 object-contain rounded-full' src={poster} alt="" />  
                 </div>
                 <div 
                 className='w-[70px]  flex justify-center bg-gray-400 dark:bg-gray-950 items-center rounded-full transition-all duration-300   h-[40px] ' onClick={() => setIsDarkMode(!isDarkMode)}>
-                  <div className='w-[30px] transform transition-all duration-300 dark:bg-gray-100 shadow-lg translate-x-[50%] dark:translate-x-[-50%] bg-gray-800 h-[30px] rounded-full '></div>
+                  <div className='w-[30px] transform transition-all duration-300 dark:bg-gray-100 shadow-lg translate-x-[-50%] dark:translate-x-[50%] bg-gray-800 h-[30px] rounded-full '></div>
                 </div>
             </motion.div>, document.getElementById("menu-root"))
         }  
