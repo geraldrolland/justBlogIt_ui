@@ -9,7 +9,8 @@ import BlogItemsPage from './components/home/BlogItemsPage'
 import PostList from './components/home/PostList'
 import UploadPage from './components/home/UploadPage'
 import NotificationPage from './components/home/NotificationPage'
-
+import UserProfile from './components/home/UserProfile'
+import EditUserProfile from './components/home/EditUserProfile'
 export const queryClient = new QueryClient()
 export const theme = createContext()
 function App() {
@@ -49,6 +50,8 @@ function App() {
         <Route path='post-list/' element={<PostList/>} />
         <Route path="notification" element={<NotificationPage/>} />    
         <Route path="upload-post" element={<UploadPage/>} />
+        <Route path='/user-profile' element={<UserProfile/>} />
+        <Route path='/edit-userprofile' element={<EditUserProfile/>} />
         </Route>
         <Route path='sign-up' element={<SignUp/>} />
         <Route path='log-in' element={<LogIn/>} />
