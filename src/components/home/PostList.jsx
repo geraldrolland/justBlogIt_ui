@@ -36,11 +36,23 @@ const PostList = () => {
   useEffect(() => {
     setPostListRef(postListRef.current)
     setIsScrollTop(true)
+    const websocket = new WebSocket("")
+    websocket.onopen = () => {
+
+    }
+
+    websocket.onmessage = () => {
+
+    }
+
+    websocket.onclose = () => {
+
+    }
   }, [])
 
   return (
-    <div onScroll={(e) => {checkIsScrollTop(e)}} className='w-[100%] scroll-smooth tab-container h-[100%]  overflow-y-scroll  '>
-        <div ref={postListRef} className='w-[100%] flex flex-col flex-wrap'>
+    <div onScroll={(e) => {checkIsScrollTop(e)}} className='w-[100%]  scroll-smooth tab-container h-[100%]  overflow-y-scroll  '>
+        <div ref={postListRef} className='w-[100%]  flex flex-col flex-wrap'>
           {
             isSuccess ? data.posts.map(post => <Post key={post.id} post={post} />) : null
 

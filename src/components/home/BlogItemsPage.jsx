@@ -230,7 +230,7 @@ const BlogItemsPage = () => {
                     Notifications
                 </h1>
             </NavLink>
-            <div  className='w-[70px] hidden  md:flex flex-col justify-center items-center h-[60px]  '>
+            <NavLink to={"/user-profile"} className='w-[70px] hidden  md:flex flex-col justify-center items-center h-[60px]  '>
                 <img src={poster} className='lg:w-[30px] flex md:border-2px md:border-green-400  justify-center items-center rounded-full relative  bg-cover h-[40px] w-[40px] lg:h-[30px]' />
                 <button  onClick={() => {
                     hideDisplaySearchResult()
@@ -240,7 +240,7 @@ const BlogItemsPage = () => {
                     <h1 className='dark:text-gray-300 -mt-1'>Me</h1>
                     <IoIosArrowDown className='dark:text-gray-300' />
                 </button>
-            </div>
+            </NavLink>
             <div onClick={() => setIsDarkMode(!isDarkMode)} className='w-[70px]  flex shadow-lg -inset-2 dark:bg-gray-950 cursor-pointer transition-all duration-300  dark:border-none bg-gray-400 justify-center items-center h-[35px] rounded-full lg:mr-0 md:mr-1'>
                 <div className='w-[27px] transition-all duration-300 h-[27px] transform translate-x-[-50%] dark:translate-x-[50%] dark:bg-gray-300 bg-gray-800  rounded-full'></div>
             </div>
@@ -357,9 +357,9 @@ const BlogItemsPage = () => {
                 <NavLink to={"/upload-post"} style={activeClass}  className='w-[65px] border-b-3px shadow-md bg-gray-200 flex justify-center items-center -mt-[28px] rounded-full text-[30px] h-[65px] text-gray-900 '>
                 <BsSend  />  
                 </NavLink>
-                <div className='w-[50px] flex justify-center items-center text-[30px] h-[100%] '>
+                <NavLink to={"/user-profile"} className='w-[50px] flex justify-center items-center text-[30px] h-[100%] '>
                 <img className='w-[45px] h-[45px] border-2px border-green-600 object-contain rounded-full' src={poster} alt="" />  
-                </div>
+                </NavLink>
                 <div 
                 className='w-[70px]  flex justify-center bg-gray-400 dark:bg-gray-950 items-center rounded-full transition-all duration-300   h-[40px] ' onClick={() => setIsDarkMode(!isDarkMode)}>
                   <div className='w-[30px] transform transition-all duration-300 dark:bg-gray-100 shadow-lg translate-x-[-50%] dark:translate-x-[50%] bg-gray-800 h-[30px] rounded-full '></div>

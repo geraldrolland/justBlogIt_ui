@@ -4,11 +4,11 @@ import "../../styles/SignUp.css"
 import { LiaSignInAltSolid } from "react-icons/lia";
 import { GoEye } from "react-icons/go";
 import { GoEyeClosed } from "react-icons/go";
-import { NavLink, useNavigate } from 'react-router-dom';
+import { json, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useRef } from 'react';
 const SignUp = () => {
-    const navigateToLogIn = useNavigate()
+    const navigateToCreateUserProfile = useNavigate()
     const [signUpInput, setSignUpInput] = useState({
         username: "",
         email: "",
@@ -24,26 +24,7 @@ const SignUp = () => {
     const emailRef = useRef(null)
     const [isEmailAlreadyExists, setIsEmailAlreadyExist] = useState(false)
 
-    const SignUpUser = async () => {
-        setisDisable(true)
-        try {
-            const response = await axios.post("", signUpInput)
-            if(response.status === 201) {
-                setisDisable(false)
-                navigateToLogIn("log-in")
-            }
 
-            if(response.status === 400) {
-                setisDisable(false)
-                setIsEmailAlreadyExist(true)
-            }
-        }
-        catch(error) {
-            console.log(error)
-        }
-
-
-    }
 
     const checkInvalidInput = () => {
         const passwordRegex = /^(?=.*[A-Z])(?=.*[\W_])[A-Za-z\d\W_]{8,}$/;
@@ -66,7 +47,9 @@ const SignUp = () => {
 
     const handleSignUp = () => {
         if (checkInvalidInput()) {
-            SignUpUser()
+            sessionStorage.setItem("userProfileInfo", JSON.stringify(signUpInput))
+            navigateToCreateUserProfile("/create-userprofile")
+                                    
         }
     }
     const viewPassword = () => {

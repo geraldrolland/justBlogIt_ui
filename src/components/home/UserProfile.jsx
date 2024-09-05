@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BsSend } from "react-icons/bs";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { IoPeople } from "react-icons/io5";
@@ -6,20 +6,27 @@ import "../../styles/SignUp.css"
 import { NavLink} from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useContext } from 'react';
+import { theme } from '../../App';
 const UserProfile = () => {
+    const {setIsScrollTop} = useContext(theme)
     const {} = useQuery({
         queryKey: ["userprofile"],
         queryFn: async () => {
             const response = await axios.get("")
         }
     })
+
+    useEffect(() => {
+        setIsScrollTop(true)
+    }, [])
   return (
-    <div className='w-[100%] h-[100%] tab-container overflow-y-scroll scroll-smooth'>
+    <div className='w-[100%] h-[100%] overflow-x-hidden tab-container overflow-y-scroll scroll-smooth'>
         <div className='w-[100%] flex  mx-auto'>
             <div className='w-[100%] rounded-lg dark:bg-gray-600 bg-gray-100 h-[300px] '>
                 <div className='w-[100%] h-[70px]  flex justify-start space-x-2 items-center'>
                     <img className='w-[70px] h-[70px] border-1px rounded-full' src="" alt="" />
-                    <h1 className='text-gray-500 font-semibold capitalize -mt-5 dark:text-gray-300'>Onyeka Gerald Ujowundu</h1>
+                    <h1 className='text-gray-500 font-semibold capitalize -mt-5 dark:text- \    gray-300'>Onyeka Gerald Ujowundu</h1>
                 </div>
                 <div className='w-[80%] mx-auto h-[100px]  mt-4 space-x-4 items-center justify-center flex'>
                     <div className='w-[120px] h-[100%]  flex flex-col items-center'>
@@ -49,18 +56,18 @@ const UserProfile = () => {
         </div>
         <h1 className='dark:text-gray-400 text-gray-700 border-1px  mt-4 capitalize h-[30px] w-[70px] flex items-center font-semibold justify-center rounded-full tracking-wide '>Posts</h1>
 
-        <div className='w-[100%] mx-auto mt-2 rounded-md h-[170px]  shadow-md dark:shadow-lg'>
-            <div className='w-[300px]  space-x-2 flex justify-start items-center h-[30px] '><h1 className='dark:text-gray-400 text-gray-700 font-semibold capitalize text-[14px]'>Onyeka Ujowundu Gerald</h1>
+        <div className='w-[100%] mx-auto mt-2 rounded-md h-[170px]  md:shadow-md md:dark:shadow-lg'>
+            <div className='w-[300px]  space-x-2 flex justify-start items-center h-[30px] '><h1 className='dark:text-gray-400 text-gray-700 font-semibold capitalize text-[14px] md:tracking-normal tracking-tight'>Onyeka Ujowundu Gerald</h1>
             <h1 className='dark:text-gray-400 text-gray-500 text-[12px]'>posted this</h1>
             <div className='w-[6px] h-[6px] bg-gray-600 rounded-full '></div>
             <h1 className='dark:text-gray-300 text-[14px] proportional-nums text-gray-600'>12h</h1>
             </div>
-            <div className='w-[450px] h-[30px] flex justify-start items-center space-x-2'>
+            <div className='w-[450px] h-[30px] flex justify-start items-center md:space-x-2 space-x-1'>
                 <h1 className='dark:text-gray-400 text-gray-700 font-semibold tracking-wider'>
                     Title
                 </h1>
                 <div className='w-[30px] rounded-full dark:bg-gray-700 bg-gray-400 h-[10px]'></div>
-                <h1 className='dark:text-gray-200 capitalize tracking-wide text-gray-600 w-[350px] truncate font-semibold'>
+                <h1 className='dark:text-gray-200 capitalize md:tracking-wide tracking-tighter text-gray-600 md:w-[350px] truncate font-semibold'>
                     10 ways to become a software engineer
                 </h1>
             </div>
