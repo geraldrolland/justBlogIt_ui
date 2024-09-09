@@ -276,20 +276,18 @@ const Post = ({post}) => {
         <h1 ref={showMoreRef}  onClick={() => expandTextBox()}  className='text-blue-500
           hidden  ml-[80%] cursor-pointer tracking-wide  jus dark:text-blue-700 md:ml-[470px]'>... more</h1>
         <img className='w-[100%]  rounded-[4px] border-1px mt-4 h-[500px]' src="" alt="" />
-        <div className='w-[95%] h-[40px] dark:border-transparent border-gray-500 flex space-x-2 justify-start items-center border-b-1px mx-auto mt-2'>
-            <div className='w-[55px]  text-[14px] font-semibold h-[30px] flex items-center justify-center space-x-1'>
-                    <span className='proportional-nums dark:text-gray-400 text-gray-600 '>{post.reactions.likes}</span>
-                <span className='text-blue-700  dark:text-blue-500 block'>{post.reactions.likes === 1 ? "Like" : "Likes"}</span>
-            </div>
-            <div className='w-[8px] h-[8px] rounded-full dark:bg-gray-600 bg-gray-500'></div>
-            <div className='w-[100px] space-x-1 h-[30px]  flex justify-start items-center text-[14px]'>
-            <span className='proportional-nums font-semibold dark:text-gray-400  text-gray-600 '>{post.reactions.likes}</span>
-            <span className='text-blue-600 font-semibold  dark:text-blue-400 block'>{post.reactions.likes === 1 ? "Comment" : "Comments"}</span>
-            </div>
+        <div className='w-[95%] h-[40px] dark:border-transparent border-gray-500 flex space-x-1 justify-start items-center border-b-1px mx-auto mt-2'>
+                    <span className='proportional-nums dark:text-gray-400 text-[14px] font-semibold text-gray-600 '>{post.reactions.likes}</span>
+                <span className='text-blue-700 text-[14px]  dark:text-blue-500 block font-semibold'>{post.reactions.likes === 1 ? "Like" : "Likes"}</span>
+
+            <div className='w-[6px] h-[6px] rounded-full dark:bg-gray-600 bg-gray-500'></div>
+
+            <span className='proportional-nums font-semibold dark:text-gray-400  text-gray-600 text-[14px] '>{post.reactions.likes}</span>
+            <span className='text-blue-600 text-[14px] font-semibold  dark:text-blue-400 block'>{post.reactions.likes === 1 ? "Comment" : "Comments"}</span>
         </div>
         <div className='md:w-[80%] w-[100%]  h-[35px] flex md:justify-start mb-4 items-center justify-evenly md:space-x-6 mx-auto mt-4'>
             <div className='md:w-[100px] w-[80px]  h-[100%]  relative cursor-pointer group  rounded-full'>
-                <div className='absolute animateBox group-hover:flex z-10 shadow-md hidden hover:flex justify-center space-x-4 rounded-[6px] dark:bg-gray-900  items-center w-[130px] md:w-[160px] h-[45px] -bottom-[-35px] backdrop-filter  backdrop-blur-md -left-[30px]'>
+                <div className='absolute animateBox group-hover:flex z-10 shadow-md hidden hover:flex justify-center md:space-x-4 space-x-2 rounded-[6px] dark:bg-gray-900  items-center w-[100px] md:w-[160px] h-[45px] -bottom-[-35px] backdrop-filter  border-blue-800  backdrop-blur-md md:-left-[30px] -left-[10px]'>
                     <span onClick={() => like("span1")}
                     id='span1' 
                     className='inline-block span1 hover:scale-125 text-[25px]  md:text-[30px] transform hover:-translate-y-3 transition-all duration-200'>&#128079;</span>

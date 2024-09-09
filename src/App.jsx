@@ -11,6 +11,7 @@ import UploadPage from './components/home/UploadPage'
 import NotificationPage from './components/home/NotificationPage'
 import UserProfile from './components/home/UserProfile'
 import EditUserProfile from './components/home/EditUserProfile'
+import CreateUserProfile from './components/home/CreateUserProfile'
 export const queryClient = new QueryClient()
 export const theme = createContext()
 function App() {
@@ -53,6 +54,7 @@ function App() {
         <Route path='/user-profile' element={<UserProfile/>} />
         <Route path='/edit-userprofile' element={<EditUserProfile/>} />
         </Route>
+        <Route path='create-userprofile' element={<CreateUserProfile/>} />
         <Route path='sign-up' element={<SignUp/>} />
         <Route path='log-in' element={<LogIn/>} />
       </Routes>
