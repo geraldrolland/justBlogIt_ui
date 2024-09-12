@@ -4,7 +4,7 @@ import { FaHome } from "react-icons/fa";
 import { LuSend } from "react-icons/lu";
 import { FaBell } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
-import { NavLink, Outlet } from 'react-router-dom';
+import { json, NavLink, Outlet } from 'react-router-dom';
 import { useContext } from 'react';
 import { theme } from '../../App';
 import { motion } from 'framer-motion';
@@ -12,8 +12,6 @@ import { createPortal } from 'react-dom'
 import axios from 'axios';
 import { queryClient } from '../../App';
 import { useQuery } from '@tanstack/react-query';
-import hot1 from "../../assets/images/hot1.jpg"
-import hot2 from "../../assets/images/hot2.jpg"
 import poster from "../../assets/images/poster.jpg"
 import { FaPeopleGroup } from "react-icons/fa6";
 import { IoPeople } from "react-icons/io5";
@@ -22,36 +20,25 @@ import { FaRegBell } from "react-icons/fa6";
 import { BsSend } from "react-icons/bs";
 import useStore from '../customhooks/UseStore';
 import "../../styles/SignUp.css"
-
+import placeholder from "../../assets/images/imageplaceholder.png"
+import UseRequest from '../customhooks/UseRequest';
+import { useNavigate } from 'react-router-dom';
 const BlogItemsPage = () => {
-
+    const navigateToLogin = useNavigate()
     const postListRef = useStore(state => state.postListRef) 
     const {isScrollTop} = useContext(theme)
-    const menuRef = useRef(null)
+    const followingRef = useRef(null)
+    const followerRef = useRef(null)
     const searchInputRef = useRef(null)
-    const fetchPosts = async () => {
-            const response = await axios.get('https://dummyjson.com/posts')
-            return response.data
-    }
-
     const containerRef = useRef(null)
-    const {data, isPending, isError, refetch, isSuccess} = useQuery({
-        queryKey: ["search-post"],
-        queryFn: fetchPosts,
-        initialData: () => {
-            const posts = queryClient.getQueryData(["posts"])
-            return posts
-        },
-        enabled: false
-    })
-
-
-  
+    const {data, isPending, isError, refetch, isSuccess} = UseRequest("http://127.0.0.1:8000/posts/get_posts/", "get", null, "posts", false)
+    const fetchUserProfile = UseRequest("http://127.0.0.1:8000/users/get_userprofile/", "get", null, "userprofile");
     const searchPost = () => {
 
         if (isSuccess) {
             if (data) {
-                const posts = data.posts
+                console.log(data)
+                const posts = data
             if (containerRef.current) {
                 containerRef.current.style.display = "flex"
                 containerRef.current.innerHTML = ""
@@ -59,7 +46,8 @@ const BlogItemsPage = () => {
 
             if (posts) {
                 posts.forEach(post => {
-                    if (post.title.startsWith(searchInputRef.current.value)) {
+                    console.log(post.postTitle)
+                    if (post.postTitle.startsWith(searchInputRef.current.value)) {
                         console.log("error1")
                         const div = document.createElement("div")
                         const h1 = document.createElement("h1")
@@ -68,20 +56,21 @@ const BlogItemsPage = () => {
                         const span2 = document.createElement("span")
                         const name = document.createElement("h1")
                         name.className = "dark:text-blue-300 truncate  text-blue-400 truncate w-[65px]"
-                        name.innerHTML = post.author ? post.author : "Onyeka"
+                        name.innerHTML = post.user.username 
                         span1.className = "text-[18px] text-blue-500 capitalize tracking-wide"
                         span1.innerHTML = "Title - "
                         span2.className = "text-[16px]  inline-block ml-1 dark:text-gray-300 text-gray-600 truncate tracking-tight"
-                        span2.innerHTML = post.title
+                        span2.innerHTML = post.postTitle
                         div.className = "w-[100%] dark:shadow-2xl backdrop-filter backdrop-blur-lg shadow-md cursor-pointer hover:border-blue-500 transition-all duration-300 border-1px h-[50px] rounded-md flex justify-between dark:border-none mt-1 items-center"
                         h1.className="h-[100%] pl-2  flex items-center w-[60%] tracking-tight font-semibold text-gray-70 dark:text-gray-300 truncate"
                         h1.appendChild(span1)
                         h1.appendChild(span2)
-                        div.id = post.id
-                        h1.id = post.id
-                        span1.id = post.id
-                        span2.id = post.id
-                        image.id = post.id
+                        div.id = post.postId
+                        h1.id = post.postId
+                        span1.id = post.postId
+                        span2.id = post.postId
+                        image.id = post.postId
+                        
                         div.addEventListener("click", (event) => {
                             
                             let posts = postListRef.children;
@@ -114,7 +103,7 @@ const BlogItemsPage = () => {
                         });
                         image.className ="bg-cover shadow-md mr-2 rounded-full h-[35px] w-[35px]"
                         image.alt = post.title
-                        image.src = post.image ? post.image : "" 
+                        image.src = post.user.image 
                         div.appendChild(h1)
                         div.appendChild(name)
                         div.appendChild(image)
@@ -137,8 +126,22 @@ const BlogItemsPage = () => {
                     containerRef.current.appendChild(div)
                 }
             }
-
         }
+    }
+
+    const logOutuser = () => {
+        const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+        axios.post("http://127.0.0.1:8000/token-blacklist/", {refresh: userStatus.refresh})
+        .then(response => {
+            if (response.status === 200) {
+                console.log("log out")
+                sessionStorage.removeItem("userStatus")
+                navigateToLogin("/log-in/")
+            }
+        })
+        .catch(error => {
+            console.log(error)
+        })
     }
 
 
@@ -172,7 +175,43 @@ const BlogItemsPage = () => {
     }
 
     useEffect(() => {
- 
+        const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+        if (!userStatus || userStatus.isUserLoggedIn !== true)
+        {
+            navigateToLogin("/log-in/")
+        }
+        if (followerRef.current && followerRef.current) {
+            const websocket = new WebSocket("ws://127.0.0.1:8000/ws/broadcast/")
+            websocket.onopen = (e) => {
+              console.log("connected")
+            }
+            websocket.onmessage = (e) => {
+              let data = JSON.parse(e.data)
+              data = data.message
+              const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+              console.log(e)
+              if (userStatus && userStatus.id) {
+                if (userStatus.id === data.user.id && data.NotificationType === "Follow") {
+                    followingRef.current.innerHTML = parseInt(followerRef.current.innerHTML) + 1
+                }
+                else if (userStatus.id === data.receipient && data.NotificationType === "Follow") {
+                    followerRef.current.innerHTML = parseInt(followerRef.current.innerHTML) + 1
+                }
+                else if (userStatus.id === data.user.id && data.NotificationType === "Unfollow") {
+                    followingRef.current.innerHTML = parseInt(followingRef.current.innerHTML) - 1
+                }
+                else if (userStatus.id === receipient && data.NotificationType === "Unfollow") {
+                    followerRef.current.innerHTML = parseInt(followerRef.current.innerHTML) - 1
+                }
+              }
+            }
+        
+            websocket.onclose = () => {
+              console.log("disconnected")
+            } 
+        }
+       
+
     }, [])
 
   return (
@@ -189,7 +228,7 @@ const BlogItemsPage = () => {
                 </div>
                 <input onChange={() => {
                     handleSearchInput()
-                }} ref={searchInputRef} onFocus={() => refetch()} className='w-[100%] h-[100%] border-gray-800  text-[18px] pl-[45px] md:pl-[60px] dark:bg-gray-300 md:dark:bg-gray-100 rounded-[3px] dark:text-gray-500  focus:outline-none' type="text" placeholder='search post by title ....' />
+                }} ref={searchInputRef} onFocus={() => refetch()} className='w-[100%] h-[100%] border-gray-800  text-[18px] pl-[45px] md:pl-[60px]  dark:bg-gray-300 md:dark:bg-gray-100 rounded-[3px] dark:text-gray-500  focus:outline-none' type="text" placeholder='search post by title ....' />
 
             </div>
         </div>
@@ -231,7 +270,7 @@ const BlogItemsPage = () => {
                 </h1>
             </NavLink>
             <NavLink to={"/user-profile"} className='w-[70px] hidden  md:flex flex-col justify-center items-center h-[60px]  '>
-                <img src={poster} className='lg:w-[30px] flex md:border-2px md:border-green-400  justify-center items-center rounded-full relative  bg-cover h-[40px] w-[40px] lg:h-[30px]' />
+                <img  src={fetchUserProfile.isSuccess ? fetchUserProfile.data.profile_image : placeholder} className='lg:w-[30px] img flex md:border-2px md:border-green-400  justify-center items-center rounded-full relative  bg-cover h-[40px] w-[40px] lg:h-[30px]' />
                 <button  onClick={() => {
                     hideDisplaySearchResult()
                     setIshowProfile(!isShowProfile)
@@ -254,9 +293,9 @@ const BlogItemsPage = () => {
                     duration: 0.3,
                     ease: "easeInOut"
                 }}
-                className='fixed z-10 top-[80px] right-[75px]  rounded-md  h-[250px] w-[250px]'>
+                className='fixed z-10 top-[80px] hidden lg:block right-[75px]  rounded-md  h-[250px] w-[250px]'>
                     <div className='w-[100%] h-[100px]  flex justify-between items-center'>
-                        <img className='w-[90px] h-[90px] rounded-full shadow-lg  bg-cover ' src={poster} alt="" />
+                        <img id='profile_image' className='w-[90px] h-[90px] rounded-full shadow-lg  bg-cover ' src={fetchUserProfile.isSuccess ? fetchUserProfile.data.profile_image : placeholder} alt="" />
                         <div className='w-[140px] h-[90px] border-1px rounded-lg dark:text-gray-400  shadow-md  leading-tight text-[14px] p-1 tracking-tight'>
                             Hi my name is gerald i am a software engineer, i love to code and play games 
                         </div>
@@ -265,7 +304,7 @@ const BlogItemsPage = () => {
                         <NavLink to={"/user-profile"} className='w-[150px] h-[35px] flex justify-center items-center  mt-4 text-blue-500 hover:border-none hover:bg-gray-400 hover:text-blue-800 transition-all duration-200  mx-auto border-2px dark:border-none border-gray-500 rounded-full  dark:bg-gray-900'>
                             View Profile
                         </NavLink>
-                        <button className='w-[90px] h-[30px] border-2px mx-auto block mt-2 rounded-lg text-red-500  font-semibold border-blue-300 capitalize hover:shadow-md active:shadow-none transition-all transform hover:scale-105'>
+                        <button onClick={() => logOutuser()} className='w-[90px] h-[30px] border-2px mx-auto block mt-2 rounded-lg text-red-500  font-semibold border-blue-300 capitalize hover:shadow-md active:shadow-none transition-all transform hover:scale-105'>
                             log out
                         </button>
                     </div>
@@ -290,29 +329,29 @@ const BlogItemsPage = () => {
                 
             }}
             className='w-[300px] hidden lg:block h-[350px] ml-2 dark:shadow-2xl shadow-md rounded-lg absolute  left-0 top-0 '>
-                <img src={poster} className='w-[140px] shadow-lg block mx-auto mt-4 rounded-full  h-[140px] '/>
-                <h1 className='text-gray-500 w-[70%] text-center mt-1 mx-auto font-semibold text-[18px] dark:text-gray-400'>Onyeka Ujowundu Gerald</h1>
+                <img  src={fetchUserProfile.isSuccess ? fetchUserProfile.data.profile_image : placeholder} className='w-[140px] shadow-lg block mx-auto img mt-4 rounded-full  h-[140px] '/>
+                <h1 className='text-gray-500 w-[70%] text-center mt-1 mx-auto font-semibold text-[18px] dark:text-gray-400'>{fetchUserProfile.isSuccess ? fetchUserProfile.data.first_name + " " + fetchUserProfile.data.last_name : null}</h1>
                 <h1 className='mx-auto tracking-tight leading-tight  dark:text-gray-300  text-center w-[80%] mt-2'>
-                Hi my name is gerald i am a software engineer, i love to code and play games
+                {fetchUserProfile.isSuccess ? fetchUserProfile.data.bio : null}
                 </h1>
                 <div className='w-[95%] h-[45px]   mx-auto mt-4 flex justify-between items-center'>
                     <div className='w-[45%] flex  justify-between items-center h-[100%] '>
                         <h1 className='text-gray-700 capitalize tracking-tight dark:text-gray-200 font-semibold'>followers</h1>
                         <div className='w-[45px]  relative flex justify-center items-center h-[100%]'>
-                            <div className='absolute -top-3 -right-2 w-[28px] h-[28px] rounded-full text-gray-200 shadow-md  flex justify-center items-center p-[1px] font-bold  tracking-tight pt-1 bg-blue-600 border-black  text-[15px]'>201</div>
+                            <div ref={followerRef} className='absolute -top-3 -right-2 w-[28px] h-[28px] rounded-full text-gray-200 shadow-md  flex justify-center items-center p-[1px] font-bold  tracking-tight pt-1 bg-blue-600 border-black  text-[15px]'>{fetchUserProfile.isSuccess ? fetchUserProfile.data.follower_count : null}</div>
                             <FaPeopleGroup className='text-[30px] text-gray-400' />
                         </div>
                     </div>
                     <div className='w-[45%] rounded-lg flex  justify-between items-center h-[100%]'>
                         <h1 className='text-gray-700 capitalize tracking-tight font-semibold dark:text-gray-200'>following</h1>
                         <div className='w-[45px]  relative flex justify-center items-center h-[100%]'>
-                            <div className='absolute -top-3 -right-2 w-[28px] h-[28px] rounded-full text-gray-200 shadow-md  flex justify-center items-center p-[1px] font-bold  tracking-tight pt-1 bg-blue-600 border-black  text-[15px]'>1K</div>
+                            <div ref={followingRef} className='absolute -top-3 -right-2 w-[28px] h-[28px] rounded-full text-gray-200 shadow-md  flex justify-center items-center p-[1px] font-bold  tracking-tight pt-1 bg-blue-600 border-black  text-[15px]'>{fetchUserProfile.isSuccess ? fetchUserProfile.data.following_count : null}</div>
                             <IoPeople className='text-[30px] text-gray-400' />
                         </div>
                     </div>
                 </div>
             </motion.div>
-            <div className='md:w-[550px] w-[100%] h-[100%] overflow-hidden  '>
+            <div className='md:w-[550px] w-[100%] h-[100%] overflow-hidden'> 
                 <Outlet/>
             </div>
         </div>
@@ -358,7 +397,7 @@ const BlogItemsPage = () => {
                 <BsSend  />  
                 </NavLink>
                 <NavLink to={"/user-profile"} className='w-[50px] flex justify-center items-center text-[30px] h-[100%] '>
-                <img className='w-[45px] h-[45px] border-2px border-green-600 object-contain rounded-full' src={poster} alt="" />  
+                <img className='w-[45px] h-[45px] border-2px border-green-600 object-contain img rounded-full' src={poster} alt="" />  
                 </NavLink>
                 <div 
                 className='w-[70px]  flex justify-center bg-gray-400 dark:bg-gray-950 items-center rounded-full transition-all duration-300   h-[40px] ' onClick={() => setIsDarkMode(!isDarkMode)}>

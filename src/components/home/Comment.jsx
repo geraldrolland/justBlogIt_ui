@@ -6,7 +6,8 @@ import axios from "axios";
 import "../../styles/SignUp.css"
 import { LuSendHorizonal } from "react-icons/lu";
 import { BsEmojiSmile } from "react-icons/bs";
-const Comment = () => {
+import placeholder from "../../assets/images/imageplaceholder.png"
+const Comment = ({comment}) => {
   const replyBoxRef = useRef(null)
   const [isShowSendIcon, setIsShowSendIcon] = useState(false)
   const sendContainerRef = useRef(null)
@@ -17,6 +18,7 @@ const Comment = () => {
   const [replyCount, setReplyCount]  = useState(0)
   const commentInputRef = useRef(null)
   const [isShowSomethingWentWrong, setIsShowSomethingWentWrong] = useState(false)
+  const prevImage = useRef(null)
   const postLikeOnComment = useMutation({
     mutationFn: async () => {
         const response = await axios.post("")
@@ -25,7 +27,6 @@ const Comment = () => {
 
     onMutate: () => {
       setIsLike(true)
-     
       const like = document.getElementById("like")
       like.classList.remove("dark:text-gray-300")
       like.classList.remove("text-gray-700")
@@ -109,8 +110,6 @@ const Comment = () => {
       console.log("this is container height after scroll", e.target.style.height)
       setIsRender(!isRender)
     }
-
-
   }
 
   const postReply = useMutation({
@@ -175,45 +174,45 @@ const Comment = () => {
   useEffect(() => {
   const textArea = document.querySelector("textarea")
   textArea.style.height = "56px"
+  if (prevImage.current) {
+    const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+    prevImage.current.src = userStatus.profile_image ? userStatus.profile_image : placeholder
+  }
+
   }, [])
   return (
     <div className='w-[100%]   rounded-md  flex flex-wrap  flex-col relative'>
       <div className='w-[100%]  h-[50px]   flex justify-between items-center'>
-        <img className='w-[50px] h-[50px] border-1px rounded-full md:shadow-md' src="" alt="" />
+        <img className='w-[50px] h-[50px]  rounded-full md:shadow-md' src={comment.user?.image ? comment.user.image : placeholder} alt="" />
         <div className='md:w-[480px] w-[80%]  h-[100%]  flex justify-between items-center'>
           <div className='flex justify-center items-start  h-[100%] flex-col  w-[250px]'>
-            <h1 className='dark:text-gray-400 text-gray-800  md:text-[18px]'>Onyeka Gerald Ujowundu</h1>
-            <h1 className='w-[100%] text-gray-500 -mt-1 tracking-tight dark:text-gray-300 text-[14px] '>I love to code and play games</h1>
+            <h1 className='dark:text-gray-400 text-gray-800  md:text-[18px]'>{comment?.user.username}</h1>
+            <h1 className='w-[100%] text-gray-500 truncate -mt-1 tracking-tight dark:text-gray-300 text-[14px] '>{comment?.user.bio}</h1>
           </div>
-          <div className='w-[100px] h-[100%]  flex justify-center items-start'>
-            <h1 className='text-gray-400 tracking-wide'>now</h1>
-            <h1 className='text-gray-400 flex justify-center items-end tracking-wide text-[19px] -ml-2  w-[40px] h-[18px]'>...</h1>
+          <div className='w-[100px] h-[100%]   flex justify-center items-start'>
+            <h1 className='text-gray-400 tracking-wide'>{comment?.createdAt}</h1>
           </div>
         </div>
       </div>
       <h1 className='md:w-[480px] w-[100%]  border-1px md:ml-[68px] mt-2 rounded-[6px] right-0 top-[50px] flex pt-4 md:shadow-md text-gray-600 dark:text-gray-300 md:p-4 '>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam. Maecenas fermentum consequat mi. Donec fermentum. Pellentesque malesuada nulla a mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque. Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat. Cras mollis scelerisque nunc. Nullam arcu. Aliquam consequat.
-
-Curabitur augue lorem, dapibus quis, laoreet et, pretium ac, nisi. Aenean magna nisl, mollis quis, molestie eu, feugiat in, orci. In hac habitasse platea dictumst. Fusce pharetra convallis urna. Quisque ut nisi. Mauris nulla. Donec quis dui at dolor tempor interdum. Pellentesque sagittis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin ut est. Duis nec magna et ipsum vehicula tincidunt. Aenean placerat. Fusce ut velit ullamcorper, tincidunt ante sit amet, ultrices felis. Donec vitae tortor.
-
-Nulla facilisi. Nulla libero. Vivamus pharetra posuere sapien. Nam consectetuer. Sed aliquam, nunc eget euismod ullamcorper, lectus nunc ullamcorper orci, fermentum bibendum enim nibh eget ipsum. Nulla lacinia porttitor diam. Sed diam ligula, vulputate at, ornare non, posuere vel, arcu. Curabitur venenatis, nisl in bibendum commodo, sapien justo cursus urna, eget elementum purus nulla et sapien. In ac felis quis tortor malesuada pretium. Maecenas ultricies, lacus ut convallis dapibus, libero neque scelerisque odio, id facilisis ligula eros at quam. Etiam vestibulum metus eget tellus. Phasellus suscipit, sapien aliquam aliquet convallis, libero pede aliquam nisi, vitae feugiat risus neque eu lectus.
+        {comment?.commentText}
       </h1>
       <div className='w-[170px] mb-4 m-4 flex justify-between items-center h-[30px] md:ml-[380px]'>
         <div className='w-[90px] flex justify-center items-center h-[100%] '>
           <button id="like" onClick={() => {handleLikeComment()}} className='dark:text-gray-300 cursor-pointer text-gray-700 capitalize text-[14px]'>like</button>
           <div className='w-[5px] h-[5px] ml-1 bg-gray-700 dark:bg-gray-300 rounded-full'></div>
-          <h1 className='dark:text-gray-400 text-gray-800 ml-1 text-[14px] font-semibold proportional-nums'>{12 + likeCount}</h1>
+          <h1 className='dark:text-gray-400 text-gray-800 ml-1 text-[14px] font-semibold proportional-nums'>{comment.like}</h1>
           {
-            <div className="w-[15px] h-[15px] -mt-[3px] ml-1 flex justify-center items-center">
+            <div className="w-[15px] h-[15px] -mt-[3px]  flex justify-center items-center">
             <FaThumbsUp className=" text-[13px] text-blue-600" />
             </div>
           }
         </div>
         <div className='w-[80px] flex justify-center items-center h-[100%]'>
         <button onClick={() => {displayReplyBox()}} className='dark:text-gray-300 text-gray-700 capitalize text-[14px]'>reply</button>
-        <h1 className='dark:text-gray-400 text-gray-800 ml-1 text-[14px] font-semibold proportional-nums'>12</h1>
+        { comment?.replyCount > 0 ?
+        <h1 className='dark:text-gray-400 text-gray-800 ml-1 text-[14px] font-semibold proportional-nums'>{comment?.replyCount}</h1> : null
+        }
         </div>
       </div>
       <div ref={replyBoxRef} className="md:w-[480px] w-[100%]  hidden overflow-x-hidden md:ml-[68px] ">

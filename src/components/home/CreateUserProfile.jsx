@@ -19,29 +19,38 @@ const CreateUserProfile = () => {
     const lastNameRef = useRef()
 
     const [createUserInput, setCreateuserInput] = useState({
-        image: "",
+        profile_image: "",
         first_name: "",
         last_name:  "",
         bio:  ""
     })
 
-    const createUserProfile = () => {
+    const createUserProfile = async () => {
         if (checkInvalidInput()) {
-            const userProfileInfo = JSON.parse(sessionStorage.getItem("userInfoProfile"))
-            setCreateuserInput({...userProfileInfo, ...createUserInput})
-            axios.post("", createUserInput)
+            const userProfileInfo = JSON.parse(sessionStorage.getItem("userProfileInfo"))
+            const formData = {
+                "email": userProfileInfo.email,
+                "username": userProfileInfo.username,
+                "password": userProfileInfo.password,
+                "first_name": createUserInput.first_name,
+                "last_name": createUserInput.last_name,
+                "bio": createUserInput.bio,
+                "profile_image": createUserInput.profile_image
+            }
+            axios.post("http://127.0.0.1:8000/users/create_user/", formData)
             .then((response) => {
-                navigateToLogIn("/log-in")      
+                setisDisable(false)
+                navigateToLogIn("/log-in/")
             })
             .catch(error => {
+                setisDisable(false)
                 console.log(error)
             })
         }
-
     }
 
     const checkInvalidInput = () => {
-        if (FirstNameRef.current.value && lastNameRef.current.value && bioRef.current.value && createUserInput.image) {
+        if (FirstNameRef.current.value && lastNameRef.current.value && bioRef.current.value && createUserInput.profile_image) {
             setisDisable(false)
             ButtonRef.current.classList.add("bg-blue-800")
             ButtonRef.current.classList.remove("bg-blue-400")
@@ -64,8 +73,10 @@ const CreateUserProfile = () => {
             const reader = new FileReader()
             reader.onload = (e) => {
                 prevImage.src = e.target.result
+                console.log(e.target.result)
+                setCreateuserInput({...createUserInput, profile_image: e.target.result})
             }
-            setCreateuserInput({...createUserInput, image: e.target.files[0]})
+            
             reader.readAsDataURL(e.target.files[0])
         }
     }
@@ -73,7 +84,7 @@ const CreateUserProfile = () => {
 
     useEffect(() => {
         try {
-            const userInfoProfile = sessionStorage.getItem("userInfoProfile")
+            const userInfoProfile = sessionStorage.getItem("userProfileInfo")
             if (userInfoProfile) {
                 FirstNameRef.current.focus()
                 checkInvalidInput()
