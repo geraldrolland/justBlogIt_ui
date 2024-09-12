@@ -40,9 +40,12 @@ const LogIn = () => {
     const LogInUser = async () => {
         setisDisable(true)
         try {
-            const response = await axios.post("", logInPut)
+            console.log(logInPut)
+            const response = await axios.post("http://127.0.0.1:8000/users/login_user/", logInPut)
             if (response.status === 200) {
                 setisDisable(false)
+                const userStatus = {...response.data, isUserLoggedIn: true}
+                sessionStorage.setItem("userStatus", JSON.stringify(userStatus))
                 navigateToHome("/")
             } 
     
@@ -52,6 +55,7 @@ const LogIn = () => {
             }
         }
         catch(error) {
+            setisDisable(false)
             console.log(error)
         }
 
@@ -83,8 +87,9 @@ const LogIn = () => {
 
     useEffect(() => {
         emailRef.current.focus()
-        checkInvalidInput()
+        //checkInvalidInput()
     }, [])
+
   return (
     <div className='w-[100%] h-[640px]  flex  items-center justify-center'>
     <div className='lg:w-[360px] md:w-[400px] md:dark:border-1px  dark:border-gray-400 md:shadow-md  rounded-md h-[530px]  flex justify-center item items-center'>
