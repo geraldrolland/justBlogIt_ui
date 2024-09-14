@@ -7,6 +7,123 @@ import "../../styles/SignUp.css"
 import { LuSendHorizonal } from "react-icons/lu";
 import { BsEmojiSmile } from "react-icons/bs";
 import placeholder from "../../assets/images/imageplaceholder.png"
+import UseRequest from '../customhooks/UseRequest';
+const getMutationFunc = async (url) => {
+  // const navigateToLogin = useNavigate()
+   try {
+       const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+       const config = {
+           headers: {
+               Authorization: "Bearer " + userStatus.access
+           }
+       }
+       const response = await axios.get(url, config)
+       if (response.status === 200)
+       return response.data
+   }
+   catch(error) {
+       if (error.response.status === 401) {
+           const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+           if (userStatus && userStatus.refresh) {
+               try {
+                   const response = axios.post("http://127.0.0.1:8000/token-refresh/", {refresh: userStatus.refresh})
+                   if (response.status === 200) {
+                       userStatus.access = response.data.access
+                       sessionStorage.setItem("userStatus", JSON.stringify(userStatus))
+                       const config = {
+                           headers: {
+                               Authorization: "Bearer " + response.data.access
+                           }
+                       }
+                       try {
+                           const response = await axios.get(url, config)
+                           if (response.status === 200) {
+                               return response.data
+                           }
+                           else {
+                               throw new Error("could not authenticate")
+                           }
+                       }
+                       catch(error) {
+                           throw new Error("something went wrong")
+                       }
+                   }
+               }
+               catch(error) {
+                   //navigateToLogin("log-in")
+                   throw new Error("could not refresh access token")
+               }
+           }
+       }
+       else {
+           throw new Error("something went wrong")
+       }
+   }
+ 
+ }
+ 
+ 
+
+const postMutationFunc = async (url, data) => {
+  //const navigateToLogin = useNavigate()
+  try {
+    console.log(data)
+      console.log("tried")
+      const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+      const config = {
+          headers: {
+              Authorization: "Bearer " + userStatus.access
+          }
+      }
+      console.log("this is the point")
+      const response = await axios.post(url, data, config)
+      if (response.status === 200 || response.status === 201)
+      return response.data
+  }
+  catch(error) {
+      if (error?.response?.status === 401) {
+          const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+          if (userStatus && userStatus.refresh) {
+              try {
+                  const response = axios.post("http://127.0.0.1:8000/token-refresh/", {refresh: userStatus.refresh})
+                  if (response.status === 200) {
+                      userStatus.access = response.data.access
+                      sessionStorage.setItem("userStatus", JSON.stringify(userStatus))
+                      const config = {
+                          headers: {
+                              Authorization: "Bearer " + response.data.access
+                          }
+                      }
+                      try {
+                          const response = await axios.get(url, data,  config)
+                          if (response.status === 200) {
+                              return response.data
+                          }
+                          else {
+                              throw new Error("could not authenticate")
+                          }
+                      }
+                      catch(error) {
+                          throw new Error("something went wrong")
+                      }
+                  }
+              }
+              catch(error) {
+                  //navigateToLogin("log-in")
+                  throw new Error("could not refresh access token")
+              }
+          }
+      }
+      else {
+          console.log(error)
+          throw new Error("something went wrong")
+      }
+  }
+
+}
+
+
+
 const Comment = ({comment}) => {
   const replyBoxRef = useRef(null)
   const [isShowSendIcon, setIsShowSendIcon] = useState(false)
@@ -19,71 +136,64 @@ const Comment = ({comment}) => {
   const commentInputRef = useRef(null)
   const [isShowSomethingWentWrong, setIsShowSomethingWentWrong] = useState(false)
   const prevImage = useRef(null)
-  const postLikeOnComment = useMutation({
-    mutationFn: async () => {
-        const response = await axios.post("")
-        return response.data
-    },
 
+  const [reply , setReply] = useState({
+    "commentText": "",
+  })
+
+  const likeRef = useRef(null)
+  const imageRef = useRef(null)
+  const fetchReply = UseRequest("http://127.0.0.1:8000/comments/" + comment.commentId + "/get_replies/", "get", null, "replies/"+comment.commentId, false)
+  
+  const postLikeOnComment = useMutation({
+    mutationFn: (() => getMutationFunc("http://127.0.0.1:8000/comments/" + comment.commentId +"/like_comment/")),
     onMutate: () => {
       setIsLike(true)
-      const like = document.getElementById("like")
-      like.classList.remove("dark:text-gray-300")
-      like.classList.remove("text-gray-700")
-      like.classList.add("text-blue-700")
-      like.classList.add("dark:text-blue-500")
+      comment.likes +=1
+      likeRef.current.classList.remove("dark:text-gray-300")
+      likeRef.current.classList.remove("text-gray-700")
+      likeRef.current.classList.add("text-blue-700")
+      likeRef.current.classList.add("dark:text-blue-500")
       setLikeCount(prev => prev + 1)
     },
 
+
     onError: (error) => {
-      console.log("like error")
-      const like = document.getElementById("like")
-      like.classList.add("dark:text-gray-300")
-      like.classList.add("text-gray-700")
-      like.classList.remove("text-blue-700")
-      like.classList.remove("dark:text-blue-500")
+      comment.likes -= 1
+      likeRef.current.classList.add("dark:text-gray-300")
+      likeRef.current.classList.add("text-gray-700")
+      likeRef.current.classList.remove("text-blue-700")
+      likeRef.current.classList.remove("dark:text-blue-500")
       setIsLike(false)
       setLikeCount(prev => prev - 1)
     }
   })
 
   const postUnlikeComment = useMutation({
-    mutationFn: async () => {
-        const response = await axios.post("")
-        return response.data
-    },
+    mutationFn: (() => getMutationFunc("http://127.0.0.1:8000/comments/" + comment.commentId +"/unlike_comment/")),
 
     onMutate: () => {
       setIsLike(false)
       setLikeCount(prev => prev - 1)
-      const like = document.getElementById("like")
-      like.classList.add("dark:text-gray-300")
-      like.classList.add("text-gray-700")
-      like.classList.remove("text-blue-700")
-      like.classList.remove("dark:text-blue-500")
+      comment.likes -= 1
+      likeRef.current.classList.add("dark:text-gray-300")
+      likeRef.current.classList.add("text-gray-700")
+      likeRef.current.classList.remove("text-blue-700")
+      likeRef.current.classList.remove("dark:text-blue-500")
     },
 
     onError: (error) => {
+      comment.likes += 1
       setIsLike(true)
-      console.log("unlike error")
-      const like = document.getElementById("like")
-      like.classList.remove("dark:text-gray-300")
-      like.classList.remove("text-gray-700")
-      like.classList.add("text-blue-700")
-      like.classList.add("dark:text-blue-500")
+      likeRef.current.classList.remove("dark:text-gray-300")
+      likeRef.current.classList.remove("text-gray-700")
+      likeRef.current.classList.add("text-blue-700")
+      likeRef.current.classList.add("dark:text-blue-500")
       setLikeCount(prev => prev + 1)
     }
   })
 
-  const {data: comments, isError, isPending, isSuccess, isFetching, refetch} = useQuery({
-    queryKey: ["replies"],
-    queryFn: async () => {
-      const response = await axios.get("")
-      return response
-    },
 
-    enabled: false,
-  })
 
   const handleLikeComment = () => {
     if (isLike === false) {
@@ -113,15 +223,11 @@ const Comment = ({comment}) => {
   }
 
   const postReply = useMutation({
-    mutationFn: async () => {
-      const response = await axios.post("")
-      return response.data
-    },
-
+    mutationFn: (() => postMutationFunc("http://127.0.0.1:8000/comments/" + comment.commentId +"/post_reply/", reply)),
     onMutate: () => {
-      sendContainerRef.current.disable = true
+      //sendContainerRef.current.disable = true
       commentInputRef.current.classList.remove("bg-gray-600")
-      commentInputRef.current.classList.add("bg-gray-400")
+      commentInputRef.current.classList.add("bg-gray-500")
       sendContainerRef.current.classList.add("hidden")
       sendContainerRef.current.classList.remove("flex")
       sendingRef.current.classList.add("flex")
@@ -130,7 +236,7 @@ const Comment = ({comment}) => {
     },
 
     onSuccess: () => {
-      commentInputRef.current.value = ""
+      
       sendContainerRef.current.disable = false
       commentInputRef.current.classList.add("bg-gray-600")
       commentInputRef.current.classList.remove("bg-gray-400")
@@ -138,6 +244,7 @@ const Comment = ({comment}) => {
       sendContainerRef.current.classList.add("flex")
       sendingRef.current.classList.remove("flex")
       sendingRef.current.classList.add("hidden")
+      setReply({...reply, commentText: ""})
 
     },
 
@@ -179,6 +286,13 @@ const Comment = ({comment}) => {
     prevImage.current.src = userStatus.profile_image ? userStatus.profile_image : placeholder
   }
 
+  if (imageRef.current) {
+    const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+    if (userStatus) {
+      imageRef.current.src = userStatus.profile_image ? userStatus.profile_image : placeholder
+    }
+  }
+
   }, [])
   return (
     <div className='w-[100%]   rounded-md  flex flex-wrap  flex-col relative'>
@@ -199,9 +313,9 @@ const Comment = ({comment}) => {
       </h1>
       <div className='w-[170px] mb-4 m-4 flex justify-between items-center h-[30px] md:ml-[380px]'>
         <div className='w-[90px] flex justify-center items-center h-[100%] '>
-          <button id="like" onClick={() => {handleLikeComment()}} className='dark:text-gray-300 cursor-pointer text-gray-700 capitalize text-[14px]'>like</button>
+          <button ref={likeRef} onClick={() => {handleLikeComment()}} className='dark:text-gray-300 cursor-pointer text-gray-700 capitalize text-[14px]'>like</button>
           <div className='w-[5px] h-[5px] ml-1 bg-gray-700 dark:bg-gray-300 rounded-full'></div>
-          <h1 className='dark:text-gray-400 text-gray-800 ml-1 text-[14px] font-semibold proportional-nums'>{comment.like}</h1>
+          <h1 className='dark:text-gray-400 text-gray-800 ml-1 mr-1 text-[14px] font-semibold proportional-nums'>{comment.likes > 0 ? comment.likes : null}</h1>
           {
             <div className="w-[15px] h-[15px] -mt-[3px]  flex justify-center items-center">
             <FaThumbsUp className=" text-[13px] text-blue-600" />
@@ -209,18 +323,22 @@ const Comment = ({comment}) => {
           }
         </div>
         <div className='w-[80px] flex justify-center items-center h-[100%]'>
-        <button onClick={() => {displayReplyBox()}} className='dark:text-gray-300 text-gray-700 capitalize text-[14px]'>reply</button>
+        <button onClick={() => {
+          fetchReply.refetch()
+          displayReplyBox()
+          }} className='dark:text-gray-300 text-gray-700 capitalize text-[14px]'>reply</button>
         { comment?.replyCount > 0 ?
-        <h1 className='dark:text-gray-400 text-gray-800 ml-1 text-[14px] font-semibold proportional-nums'>{comment?.replyCount}</h1> : null
+        <h1 className='dark:text-gray-400 text-gray-800 ml-1 text-[14px] font-semibold proportional-nums'>{comment?.replyCount > 0 ? comment.replyCount : null}</h1> : null
         }
         </div>
       </div>
       <div ref={replyBoxRef} className="md:w-[480px] w-[100%]  hidden overflow-x-hidden md:ml-[68px] ">
         <div className="w-[100%] relative justify-between  flex ">
-          <img className="w-[50px] h-[50px] border-1px  rounded-full" src="" alt="" />
-          <textarea  ref={commentInputRef} onChange={() => {
+          <img ref={imageRef} className="w-[50px] h-[50px] border-1px  rounded-full" src="" alt="" />
+          <textarea  ref={commentInputRef} value={reply.commentText} onChange={(e) => {
             setIsShowSomethingWentWrong(false)
             displaySendIcon()
+            setReply({...reply, commentText: e.target.value})
             }} onKeyDown={(e) => expandReplyContainer(e)} className="md:w-[380px] w-[85%] overflow-y-hidden resize-none bg-gray-600 dark:text-gray-300 pl-4 h-[50px] pt-2  text-gray-400 focus:outline-none rounded-md pb-4 " name=""  id="" placeholder="Add reply here ..."></textarea>
         </div>
         { postReply.isError && isShowSomethingWentWrong ? 
@@ -241,7 +359,12 @@ const Comment = ({comment}) => {
           sending ...
         </div>
         <div className="w-[100%] flex flex-col   mt-2">
-        <Reply/>
+          { 
+          
+          fetchReply?.isSuccess ? fetchReply?.data?.map(reply => <Reply key={reply.commentId} reply={reply}/>) : null
+          
+          }
+
         </div>
       </div>
     </div>

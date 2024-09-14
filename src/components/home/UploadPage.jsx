@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import placeholder from "../../assets/images/imageplaceholder.png"
 const getMutationFunc = async (url) => {
-  const navigateToLogin = useNavigate()
+  //const navigateToLogin = useNavigate()
   try {
       const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
       const config = {
@@ -47,7 +47,7 @@ const getMutationFunc = async (url) => {
                   }
               }
               catch(error) {
-                  navigateToLogin("log-in")
+                  //navigateToLogin("log-in")
                   throw new Error("could not refresh access token")
               }
           }
@@ -135,6 +135,7 @@ const UploadPage = () => {
       const reader = new FileReader()
       reader.onload = (e) => {
         const prevImage = document.getElementById("prevImage")
+        prevImage.classList.remove("hidden")
         prevImage.src = e.target.result
         setPost({...post, postImage: e.target.result})
       }
@@ -174,13 +175,13 @@ const UploadPage = () => {
           <img ref={imageRef} className='w-[50px] object-contain h-[50px] rounded-full' src="" alt="" />
         </div>
         <input onChange={(e) => setPrevImage(e)} id='file' className='hidden' type="file" />
-        <img id='prevImage' src='' className='w-[95%]  bg-cover mt-10 rounded-md h-[300px] border-1px mx-auto'/>
-        <button onClick={() => {handleUploadImage()}} className='w-[120px] bg-gray-500 ml-[2.5%] mt-4 h-[35px] border-1px rounded-md text-gray-100 capitalize'>
+        <img id='prevImage' src='' className='w-[300px] hidden  bg-cover mt-10 rounded-md h-[300px] border-1px mx-auto'/>
+        <button onClick={() => {handleUploadImage()}} className='w-[120px] bg-gray-500 ml-[2.5%] mt-4 h-[35px]  dark:bg-gray-600 dark:text-gray-300 rounded-md text-gray-100 capitalize'>
           upload image
         </button>
-        <input value={post.postTitle} onChange={(e) => setPost({...post, postTitle: e.target.value})} className='w-[95%] mx-auto mt-8 focus:outline-none rounded-md border-gray-700 pl-4 h-[45px] capitalize block border-1px' type="text" placeholder='Add title here ...' />
-        <textarea value={post.postText} onChange={(e) => setPost({...post, postText: e.target.value})} className='w-[95%] tab-container h-[250px] border-1px block mx-auto mt-5 focus:outline-none rounded-md pl-4 pt-2 border-gray-700 resize-none' placeholder='Add Description Here ...' name="" id=""></textarea>
-        <button onClick={() => createPost.mutate()} className='w-[100px] h-[40px] border-1px ml-[2.5%] mt-5 mb-5 rounded-md bg-blue-700 text-gray-100 capitalize'>
+        <input value={post.postTitle} onChange={(e) => setPost({...post, postTitle: e.target.value})} className='w-[95%] mx-auto mt-8 focus:outline-none dark:bg-gray-700 dark:text-gray-300 rounded-md border-gray-700 pl-4 h-[45px] capitalize block border-1px' type="text" placeholder='Add title here ...' />
+        <textarea value={post.postText} onChange={(e) => setPost({...post, postText: e.target.value})} className='w-[95%] tab-container h-[250px] border-1px block mx-auto mt-5 focus:outline-none dark:bg-gray-700 dark:text-gray-300 rounded-md pl-4 pt-2 border-gray-700 resize-none' placeholder='Add Description Here ...' name="" id=""></textarea>
+        <button onClick={() => createPost.mutate()} className='w-[100px] h-[40px]  ml-[2.5%] mt-5 mb-5 rounded-md bg-blue-700 dark:bg-blue-800 text-gray-100 capitalize'>
           {createPost.isPending ? "posting ..." : "post"}
         </button>
       </div>

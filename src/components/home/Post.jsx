@@ -16,7 +16,7 @@ import UseMutationFunc from '../customhooks/UseMutationFunc';
 import placeholder from "../../assets/images/imageplaceholder.png"
 import { useNavigate } from 'react-router-dom';
 const getMutationFunc = async (url) => {
-    const navigateToLogin = useNavigate()
+   // const navigateToLogin = useNavigate()
     try {
         const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
         const config = {
@@ -57,7 +57,7 @@ const getMutationFunc = async (url) => {
                     }
                 }
                 catch(error) {
-                    navigateToLogin("log-in")
+                    //navigateToLogin("log-in")
                     throw new Error("could not refresh access token")
                 }
             }
@@ -71,7 +71,7 @@ const getMutationFunc = async (url) => {
   
   
   const postMutationFunc = async (url, data) => {
-    const navigateToLogin = useNavigate()
+    //const navigateToLogin = useNavigate()
     try {
       console.log(data)
         console.log("tried")
@@ -115,7 +115,7 @@ const getMutationFunc = async (url) => {
                     }
                 }
                 catch(error) {
-                    navigateToLogin("log-in")
+                    //navigateToLogin("log-in")
                     throw new Error("could not refresh access token")
                 }
             }
@@ -172,6 +172,8 @@ const Post = ({post}) => {
         }
     })
 
+    const [commentMsg, setCommentMsg] = useState({})
+
 
     const expandTextBox = () => {
         if (isClickTextBox === true) {
@@ -227,11 +229,15 @@ const Post = ({post}) => {
 
     const postUserComment = useMutation({
         mutationFn: (() => postMutationFunc("http://127.0.0.1:8000/posts/" + post.postId + "/post_comment/", userComment)),
+
         onSuccess: (data) => {
-            console.log("this is the comment data ", data)
+            if (!comments) {
+                comments = []
+            } 
             comments.unshift(data)
-            console.log("THIS IS THE COMMENT LIST", comments)
             setIsRender(!isRender)
+            commentInputRef.current.classList.remove("bg-500-gray")
+            commentInputRef.current.classList.add("bg-600-gray")
             commentInputRef.current.classList.disable = false
             sendContainerRef.current.classList.add("flex")
             sendContainerRef.current.classList.remove("hidden")
@@ -244,6 +250,8 @@ const Post = ({post}) => {
         },
 
         onError: (error) => {
+            commentInputRef.current.classList.remove("bg-500-gray")
+            commentInputRef.current.classList.add("bg-600-gray")
             commentInputRef.current.classList.disable = false
             sendContainerRef.current.classList.add("flex")
             sendContainerRef.current.classList.remove("hidden")
@@ -255,6 +263,8 @@ const Post = ({post}) => {
 
     const postComment = () => {
         commentInputRef.current.disable = true
+        commentInputRef.current.classList.remove("bg-600-gray")
+        commentInputRef.current.classList.add("bg-500-gray")
         sendContainerRef.current.classList.remove("flex")
         sendContainerRef.current.classList.add("hidden")
         sendingRef.current.classList.remove("hidden")
@@ -276,10 +286,13 @@ const Post = ({post}) => {
     }
 
     const postLike = useMutation({
+    
         mutationFn: (() => getMutationFunc("http://127.0.0.1:8000/posts/" + post.postId + "/like_post/"))
         ,
         onMutate: () => {
+            console.log("this is like")
             post.likes += 1
+            console.log(post.likes)
             setIsRender(!isRender)
         },
 
@@ -293,10 +306,11 @@ const Post = ({post}) => {
     const postUnLike = useMutation({
         mutationFn: (() => getMutationFunc("http://127.0.0.1:8000/posts/" + post.postId + "/unlike_post/")),
         onMutate: () => {
+            console.log("this is the unlike")
             post.likes -= 1
+            console.log(post.likes)
             setIsRender(!isRender)
         },
-
         onError: (error) => {
             post.likes += 1
             setIsRender(!isRender)
@@ -307,6 +321,7 @@ const Post = ({post}) => {
         if (isOnce === false) {
             setIsOnce(true)
             unlikeContainerRef.current.classList.add("hidden")
+            console.log("like posted")
             postLike.mutate()
         }
         likeContainerRef.current.innerHTML = ""
@@ -362,14 +377,11 @@ const Post = ({post}) => {
 
     websocket.onmessage = (e) => {
         let data =  JSON.parse(e.data)
-        const  comment =  data.message
+        const comment =  data.message
         if (comment.postId === post.postId) {
             console.log(comment)
             console.log("This is the comment list", comments)
-            if (comments) {
-                comments.unshift(comment)
-                setIsRender(!isRender)
-            }
+            setCommentMsg(comment)
         } 
     }
 
@@ -381,10 +393,6 @@ const Post = ({post}) => {
         websocket.close()
     }
     }, [])
-
-    useEffect(() => {
-        
-    }, [isFollow])
 
   return (
     <div id={post.postId} className='w-[100%] transition-all duration-300 flex flex-col flex-wrap border-b-1px mb-4 rounded-lg'>

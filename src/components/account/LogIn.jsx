@@ -45,6 +45,8 @@ const LogIn = () => {
             if (response.status === 200) {
                 setisDisable(false)
                 const userStatus = {...response.data, isUserLoggedIn: true}
+                console.log("navigat to home")
+                sessionStorage.removeItem("userProfileInfo")
                 sessionStorage.setItem("userStatus", JSON.stringify(userStatus))
                 navigateToHome("/")
             } 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { BsSend } from "react-icons/bs";
 import { FaPeopleGroup } from "react-icons/fa6";
 import { IoPeople } from "react-icons/io5";
@@ -11,16 +11,15 @@ import { theme } from '../../App';
 import placeholder from "../../assets/images/imageplaceholder.png"
 import UseRequest from '../customhooks/UseRequest';
 const UserProfile = () => {
+    const userPostRef = useRef(null)
     const {setIsScrollTop} = useContext(theme)
     const {isError, isPending, isSuccess, data} =  UseRequest("http://127.0.0.1:8000/users/get_userprofile/", "get", null, "userprofile");
     const userPosts = UseRequest("http://127.0.0.1:8000/users/get_userposts/", "get", null, "usersposts");
+    const deleteUserPost = UseRequest("http://127.0.0.1:8000/posts/"+ userPostRef.current?.id + "/delete_post/", "delete", null, true, null);
+    const [isClicked, setIsClicked] = useState(false)
     useEffect(() => {
-        const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
-        if (userStatus){
-            const profile_image = document.getElementById("profile_image")
-        }
         setIsScrollTop(true)
-
+        
     }, [])
   return (
     <div className='w-[100%] h-[100%] overflow-x-hidden tab-container overflow-y-scroll scroll-smooth'>
@@ -57,14 +56,23 @@ const UserProfile = () => {
             </div>
         </div>
         { userPosts.isSuccess ?
-        <h1 className='dark:text-gray-400 text-gray-700 border-1px  mt-4 capitalize h-[30px] w-[70px] flex items-center font-semibold justify-center rounded-full tracking-wide '>Posts</h1> : null
+        <h1 className='dark:text-gray-400 text-gray-700   mt-4 capitalize h-[30px] w-[70px] flex items-center font-semibold justify-center rounded-full tracking-wide '>Posts</h1> : null
         }
         { userPosts.isSuccess ? userPosts.data.map(userpost => 
-            <div className='w-[100%] mx-auto mt-2 rounded-md h-[170px]  md:shadow-md md:dark:shadow-lg'>
-        <div className='w-[300px]  space-x-2 flex justify-start items-center h-[30px] '><h1 className='dark:text-gray-400 text-gray-700 font-semibold text-[14px] md:tracking-normal tracking-tight'>{userpost.user.username}</h1>
-        <h1 className='dark:text-gray-400 text-gray-500 text-[12px]'>posted this</h1>
+        <div style={{
+            display: deleteUserPost?.isSuccess ? "none" : "block", 
+        }} key={userpost.postId} ref={userPostRef} id={userpost.postId} className='relative w-[100%] group hover:h-[210px] transition-all duration-300  h-[170px] mt-2'>
+         <button  onClick={() => {
+            setIsClicked(true)
+            deleteUserPost.mutate()
+            }} className='absolute w-[100px] border-2px dark:border-none dark:bg-red-500 dark:text-gray-300 right-0 group-hover:translate-y-[0px] transition-all duration-300 bottom-0 h-[30px] capitalize text-red-700 text-[15px] tracking-wide border-red-400 rounded-[4px] transform -translate-y-[40px] group-hover:z-10 '>
+            {deleteUserPost?.isPending ? "deleting .." : "delete"}
+         </button>
+            <div className='w-[100%] relative z-10 top-0 right-0  mx-auto  rounded-md h-[170px]  dark:bg-gray-800 bg-gray-300 md:shadow-md md:dark:shadow-lg'>
+        <div className='w-[300px]   space-x-2 flex justify-start items-center h-[30px] '><h1 className='dark:text-gray-400 text-gray-700 truncate font-semibold text-[14px] md:tracking-normal tracking-tight'>{userpost.user.username}</h1>
+        <h1 className='dark:text-gray-400 text-gray-500 w-[80px] text-[12px]'>posted this</h1>
         <div className='w-[6px] h-[6px] bg-gray-600 rounded-full '></div>
-        <h1 className='dark:text-gray-300 text-[14px] proportional-nums text-gray-600'>{userpost.createdAt}</h1>
+        <h1 className='dark:text-gray-300 text-[14px] proportional-nums w-[100px] text-gray-600'>{userpost.createdAt}</h1>
         </div>
         <div className='w-[450px] h-[30px] flex justify-start items-center md:space-x-2 space-x-1'>
             <h1 className='dark:text-gray-400 text-gray-700 font-semibold tracking-wider'>
@@ -83,14 +91,14 @@ const UserProfile = () => {
                 {userpost.postText}
             </h1>
         </div>
-        <div className='w-[100%] h-[20px] flex justify-between items-center mt-[3px]'>
+        <div className='w-[100%] h-[20px] flex justify-between relative items-center mt-[3px]'>
             { userpost.likes > 0 ?
-            <div className='h-[100%] ml-1 space-x-1 flex justify-start items-center  w-[70px]'><h1 className="text-[14px]">&#128077;</h1><h1 className='text-blue-700  mt-1 proportional-nums text-[14px]'>
+            <div className='h-[100%] ml-1 space-x-1 flex justify-start left-0 top-0 absolute items-center  w-[70px]'><h1 className="text-[14px]">&#128077;</h1><h1 className='text-blue-700  mt-1 proportional-nums text-[14px]'>
             {userpost.likes}
             </h1></div> : null
             }
             { userpost.commentCount ?
-            <div className='h-[100%] mr-1 space-x-1 flex justify-end items-center  w-[150px]'>
+            <div className='h-[100%] absolute right-0 top-0 mr-1 space-x-1 flex justify-end items-center  w-[150px]'>
                 <h1 className='text-[14px] dark:text-gray-500 text-gray-700'>{
                     userpost.commentCount === 1 ? "comment" : 'comments'
                     }</h1>
@@ -100,7 +108,7 @@ const UserProfile = () => {
             }
 
         </div>
-    </div>
+    </div> </div>
         ) : null
         }
 
