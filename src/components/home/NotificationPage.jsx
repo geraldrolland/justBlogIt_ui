@@ -7,12 +7,13 @@ import Loader from './Loader'
 import placeholder from  "../../assets/images/imageplaceholder.png"
 const NotificationPage = () => {
   const {setIsScrollTop} = useContext(theme)
-  const [notificationList, setNotificationList] = useState([])
-
+  const [profile_image, setProfile_image] = useState("")
 
   const notifications = UseRequest("http://127.0.0.1:8000/users/get_notifications/", "get", null, "notifications") 
   useEffect(() => {
     setIsScrollTop(true)
+    const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
+    setIsScrollTop(userStatus.profile_image)
 
     const websocket = new WebSocket("ws://127.0.0.1:8000/ws/broadcast/")
 
@@ -39,7 +40,7 @@ const NotificationPage = () => {
     <div className='w-[100%] h-[100%] tab-container  overflow-y-scroll '>
       <div className='w-[100%] flex flex-col'>
         {
-          notifications.isSuccess ? notifications.data.map( notification => 
+          notifications.isSuccess ? notifications.data.map(notification => 
         <div key={notification.notificationId} className='w-[100%] px-1 border-1px rounded-none md:border-b-0 md:dark:border-1px relative md:mt-3 lg:mt-2 mt-1  justify-evenly flex flex-col items-center h-[120px] md:shadow-md dark:shadow-none md:rounded-md'>
           <div className='w-[100%]  mt-4 md:mt-0 h-[40px] mb-3 flex justify-between items-center mr-1'>
             {
@@ -60,7 +61,10 @@ const NotificationPage = () => {
                   notification.notificationType === "Unfollow" ? "unfollows you" : null
                 }
                 {
-                  notification.notificationType === "unlike" ? "unlikes your comment" : null
+                  notification.notificationType === "Unlike" && notification.commentText ? "unlikes your comment" : null
+                }
+                {
+                  notification.notificationType === "Like" && notification.commentText ? "likes your comment" : null
                 }
                 {
                   notification.notificationType === "Like" && notification.postText ? "likes your post" : null
@@ -69,7 +73,7 @@ const NotificationPage = () => {
                   notification.notificationType === "Unlike" && notification.postText ? "unlikes your post" : null
                 }
                 </h1>
-                { notification.notificationType === "Follow" || notification.notificationType == "Unfollow" ? null :
+                { notification.notificationType === "Follow" || notification.notificationType == "Unfollow" || notification.notificationType === "Like" && notification.commentText || notification.notificationType === "Unlike" && notification.commentText ? null :
               <div className='md:w-[6px] md:h-[6px] w-[4px] h-[4px] dark:bg-gray-400 rounded-full bg-gray-800'></div> 
                 }
 
@@ -85,15 +89,16 @@ const NotificationPage = () => {
               }
             </div>
           </div>
-          { notification.postImage && notification.postText ?
+          { notification.postImage && notification.postText || notification.commentText && notification.notificationType === "Unlike" || notification.notificationType === "Like" && notification.commentText ?
           <div className='w-[100%] flex justify-center items-center md:h-[65px] h-[50px]  -mt-2'>
           { 
           notification.postImage ?
           <img className='w-[60px] h-[100%]' src={notification.postImage} alt="" /> : null
           }
-          { notification.postText ?
+          { notification.postText || notification.commentText ?
           <h1 className='w-[485px] truncate text-gray-600 text-wrap text-justify text-[13px] h-[100%] dark:text-gray-400 md:leading-none  leading-tight  tracking-tighter md:tracking-tight px-1'>
             {notification.postText}
+            {notification.commentText}
           </h1> : null
           }
 

@@ -5,6 +5,7 @@ import { LiaSignInAltSolid } from "react-icons/lia";
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import "../../styles/SignUp.css"
+import placeholder from "../../assets/images/imageplaceholder.png"
 const CreateUserProfile = () => {
     const hide = useRef(null)
     const view = useRef(null)
@@ -130,7 +131,7 @@ const CreateUserProfile = () => {
             className='w-[50%] -mt-3 flex justify-center text-shadow items-center font-semibold font-mono tracking-wider'>BlogIt</motion.span></div>
             <h1 className='w-[100px] flex flex-wrap text-gray-800 text-[25px] capitalize dark:text-gray-200 font-semibold'>hello,</h1>
             <h1 className='w-[300px] flex flex-wrap text-gray-800 text-[25px] capitalize dark:text-gray-200 font-semibold '>create your profile.</h1>
-            <img id='prevImage' className='w-[100px] object-cover h-[100px] block mx-auto rounded-full' src="" alt="" />
+            <img id='prevImage' className='w-[100px] object-cover h-[100px] block mx-auto rounded-full' src={placeholder} alt="" />
             <button id='btn' onClick={() => handleUploadImage()} className='w-[90px] rounded-md right-[25px] top-[200px] h-[30px] border-1px tracking-tight absolute text-gray-500 capitalize text-[12px]'>upload image</button>
             <input id='file' onChange={(e) => {
                 uploadImage(e)

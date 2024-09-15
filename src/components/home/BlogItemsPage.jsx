@@ -296,8 +296,8 @@ const BlogItemsPage = () => {
                 className='fixed z-10 top-[80px] hidden lg:block right-[75px]  rounded-md  h-[250px] w-[250px]'>
                     <div className='w-[100%] h-[100px]  flex justify-between items-center'>
                         <img id='profile_image' className='w-[90px] h-[90px] rounded-full shadow-lg  bg-cover ' src={fetchUserProfile.isSuccess ? fetchUserProfile.data.profile_image : placeholder} alt="" />
-                        <div className='w-[140px] h-[90px] border-1px rounded-lg dark:text-gray-400  shadow-md  leading-tight text-[14px] p-1 tracking-tight'>
-                            Hi my name is gerald i am a software engineer, i love to code and play games 
+                        <div className='w-[140px] h-[90px] border-1px rounded-lg dark:text-gray-400  shadow-md  leading-tight text-[14px] p-1 text-wrap truncate tracking-tight'>
+                            {fetchUserProfile.data.bio} 
                         </div>
                     </div>
                     <div className='h-[130px] shadow-md mt-[20px] rounded-lg w-[100%] border-1px'>
@@ -318,39 +318,6 @@ const BlogItemsPage = () => {
         }
         </div>
         <div onClick={() => hideDisplaySearchResult()} className='w-[100%]  lg:relative fixed h-[95%]  lg:h-[565px]  justify-center items-center flex lg:mt-[20px] rounded-md shadow-md '>
-            <motion.div
-            animate={{
-                translateY: ["0", "40px", "0", "20px", "0"]
-            }} 
-
-            transition={{
-                duration: 1,
-                ease: "easeInOut",
-                
-            }}
-            className='w-[300px] hidden lg:block h-[350px] ml-2 dark:shadow-2xl shadow-md rounded-lg absolute  left-0 top-0 '>
-                <img  src={fetchUserProfile.isSuccess ? fetchUserProfile.data.profile_image : placeholder} className='w-[140px] shadow-lg block mx-auto img mt-4 rounded-full  h-[140px] '/>
-                <h1 className='text-gray-500 w-[70%] text-center mt-1 mx-auto font-semibold text-[18px] dark:text-gray-400'>{fetchUserProfile.isSuccess ? fetchUserProfile.data.first_name + " " + fetchUserProfile.data.last_name : null}</h1>
-                <h1 className='mx-auto tracking-tight leading-tight  dark:text-gray-300  text-center w-[80%] mt-2'>
-                {fetchUserProfile.isSuccess ? fetchUserProfile.data.bio : null}
-                </h1>
-                <div className='w-[95%] h-[45px]   mx-auto mt-4 flex justify-between items-center'>
-                    <div className='w-[45%] flex  justify-between items-center h-[100%] '>
-                        <h1 className='text-gray-700 capitalize tracking-tight dark:text-gray-200 font-semibold'>followers</h1>
-                        <div className='w-[45px]  relative flex justify-center items-center h-[100%]'>
-                            <div ref={followerRef} className='absolute -top-3 -right-2 w-[28px] h-[28px] rounded-full text-gray-200 shadow-md  flex justify-center items-center p-[1px] font-bold  tracking-tight pt-1 bg-blue-600 border-black  text-[15px]'>{fetchUserProfile.isSuccess ? fetchUserProfile.data.follower_count : null}</div>
-                            <FaPeopleGroup className='text-[30px] text-gray-400' />
-                        </div>
-                    </div>
-                    <div className='w-[45%] rounded-lg flex  justify-between items-center h-[100%]'>
-                        <h1 className='text-gray-700 capitalize tracking-tight font-semibold dark:text-gray-200'>following</h1>
-                        <div className='w-[45px]  relative flex justify-center items-center h-[100%]'>
-                            <div ref={followingRef} className='absolute -top-3 -right-2 w-[28px] h-[28px] rounded-full text-gray-200 shadow-md  flex justify-center items-center p-[1px] font-bold  tracking-tight pt-1 bg-blue-600 border-black  text-[15px]'>{fetchUserProfile.isSuccess ? fetchUserProfile.data.following_count : null}</div>
-                            <IoPeople className='text-[30px] text-gray-400' />
-                        </div>
-                    </div>
-                </div>
-            </motion.div>
             <div className='md:w-[550px] w-[100%] h-[100%] overflow-hidden'> 
                 <Outlet/>
             </div>
