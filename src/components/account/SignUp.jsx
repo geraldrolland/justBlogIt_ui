@@ -42,6 +42,7 @@ const SignUp = () => {
         buttonRef.current.classList.remove("bg-blue-800")
         buttonRef.current.classList.remove("hover:bg-blue-600")
         console.log("false")
+        
         return false
     }
 
