@@ -32,6 +32,7 @@ const BlogItemsPage = () => {
     const searchInputRef = useRef(null)
     const containerRef = useRef(null)
     const {data, isPending, isError, refetch, isSuccess} = UseRequest("http://127.0.0.1:8000/posts/get_posts/", "get", null, "posts", false)
+    const navigateToPostList = useNavigate()
     const fetchUserProfile = UseRequest("http://127.0.0.1:8000/users/get_userprofile/", "get", null, "userprofile");
     const searchPost = () => {
 
@@ -210,13 +211,14 @@ const BlogItemsPage = () => {
               console.log("disconnected")
             } 
         }
-       
+       navigateToPostList("/home/post-list")
 
     }, [])
 
   return (
     <>
-      <div onClick={() => hideDisplaySearchResult()} className='w-[100%] mb-3  md:mb-0  relative items-center h-[10%] lg:h-[60px]  flex justify-between lg:justify-center lg:space-x-40'>
+    <div className='w-full h-full'>
+      <div onClick={() => hideDisplaySearchResult()} className='w-[100%] mb-[1%]  md:mb-0  relative items-center  h-[10%] lg:h-[60px]  flex justify-between lg:justify-center lg:space-x-40'>
         <div className='lg:w-[500px] md:ml-1 md:w-[50%]  flex justify-between items-center  w-[100%]  h-[45px] '>
             <div className='md:w-[100px] h-[100%]  flex flex-col md:shadow-md justify-center md:dark:border-1px  dark:border-red-500 w-[25%] rounded-sm md:rounded-md  dark:bg-transparent bg-red-500 items-center'>
                 <span className=' md:tracking-wider  text-gray-100 font-mono text-[18px] dark:text-red-500  justify-center text-shadow items-center flex font-semibold'>just</span>
@@ -233,7 +235,7 @@ const BlogItemsPage = () => {
             </div>
         </div>
         <div className='lg:w-[600px] w-[47%]   hidden md:flex h-[60px]  justify-between  items-center '>
-            <NavLink onClick={() => hideDisplaySearchResult() } to={"/"} style={activeClass} className='w-[70px] flex flex-col justify-center border-b-3px border-transparent items-center h-[60px]  '>
+            <NavLink onClick={() => hideDisplaySearchResult() } to={"/home/post-list"} style={activeClass} className='w-[70px] flex flex-col justify-center border-b-3px border-transparent items-center h-[60px]  '>
                 <div className='w-[30px] flex  justify-center items-center relative h-[30px]'>
                     <div className='w-[12px] h-[12px]  absolute top-0 right-0 bg-red-600 rounded-full'></div>
                 <FaHome className='text-[30px]  dark:text-gray-300   text-gray-700' />
@@ -242,7 +244,7 @@ const BlogItemsPage = () => {
                     Home
                 </h1>
             </NavLink>
-            <NavLink onClick={() => hideDisplaySearchResult()} to={"/upload-post"} style={activeClass} className='w-[70px] flex flex-col justify-center items-center h-[60px]   border-transparent   border-b-3px'>
+            <NavLink onClick={() => hideDisplaySearchResult()} to={"/home/upload-post"} style={activeClass} className='w-[70px] flex flex-col justify-center items-center h-[60px]   border-transparent   border-b-3px'>
                 <div className='w-[30px] flex  justify-center items-center relative h-[30px]'>
                 <LuSend className='text-[30px]  dark:text-gray-300   text-gray-700' />
                 </div>
@@ -250,7 +252,7 @@ const BlogItemsPage = () => {
                     post
                 </h1>
             </NavLink>
-            <NavLink onClick={() => hideDisplaySearchResult()} to={"/notification"} style={activeClass} className='w-[120px] flex flex-col justify-center border-transparent border-b-3px items-center h-[60px]  '>
+            <NavLink onClick={() => hideDisplaySearchResult()} to={"/home/notification"} style={activeClass} className='w-[120px] flex flex-col justify-center border-transparent border-b-3px items-center h-[60px]  '>
                 <motion.div
                 animate={{
                     rotate: ["-15deg", "15deg", "-10deg", "10deg", "-5deg", "5deg", "0"]
@@ -269,7 +271,7 @@ const BlogItemsPage = () => {
                     Notifications
                 </h1>
             </NavLink>
-            <NavLink to={"/user-profile"} className='w-[70px] hidden  md:flex flex-col justify-center items-center h-[60px]  '>
+            <NavLink to={"/home/user-profile"} className='w-[70px] hidden  md:flex flex-col justify-center items-center h-[60px]  '>
                 <img  src={fetchUserProfile.isSuccess ? fetchUserProfile.data.profile_image : placeholder} className='lg:w-[30px] img flex md:border-2px md:border-green-400  justify-center items-center rounded-full relative  bg-cover h-[40px] w-[40px] lg:h-[30px]' />
                 <button  onClick={() => {
                     hideDisplaySearchResult()
@@ -301,7 +303,7 @@ const BlogItemsPage = () => {
                         </div>
                     </div>
                     <div className='h-[130px] shadow-md mt-[20px] rounded-lg w-[100%] border-1px'>
-                        <NavLink to={"/user-profile"} className='w-[150px] h-[35px] flex justify-center items-center  mt-4 text-blue-500 hover:border-none hover:bg-gray-400 hover:text-blue-800 transition-all duration-200  mx-auto border-2px dark:border-none border-gray-500 rounded-full  dark:bg-gray-900'>
+                        <NavLink to={"/home/user-profile"} className='w-[150px] h-[35px] flex justify-center items-center  mt-4 text-blue-500 hover:border-none hover:bg-gray-400 hover:text-blue-800 transition-all duration-200  mx-auto border-2px dark:border-none border-gray-500 rounded-full  dark:bg-gray-900'>
                             View Profile
                         </NavLink>
                         <button onClick={() => logOutuser()} className='w-[90px] h-[30px] border-2px mx-auto block mt-2 rounded-lg text-red-500  font-semibold border-blue-300 capitalize hover:shadow-md active:shadow-none transition-all transform hover:scale-105'>
@@ -317,7 +319,7 @@ const BlogItemsPage = () => {
                 </div>, document.getElementById("search-root")) 
         }
         </div>
-        <div onClick={() => hideDisplaySearchResult()} className='w-[100%]  lg:relative fixed h-[95%]  lg:h-[565px]  justify-center items-center flex lg:mt-[20px] rounded-md shadow-md '>
+        <div onClick={() => hideDisplaySearchResult()} className='w-[100%]  fixed h-[95%] lg:h-[89%]  g:h-[565px]  justify-center items-center flex lg:mt-[20px] rounded-md shadow-md '>
             <div className='md:w-[550px] w-[100%] h-[100%] overflow-hidden'> 
                 <Outlet/>
             </div>
@@ -336,13 +338,13 @@ const BlogItemsPage = () => {
                 ease: "easeInOut"
             }}
             className='md:hidden backdrop-filter  backdrop-blur-lg shadow-md rounded-l-[20px] rounded-r-[20px] w-[100%] fixed z-10 bottom-0 right-0 h-[50px] dark:border-1px flex justify-evenly items-center'>
-                <NavLink to={"/"} style={activeClass} className='w-[50px] relative flex justify-center text-gray-700  dark:text-gray-300 border-b-3px rounded-md items-center text-[30px] h-[100%] '>
+                <NavLink to={"/home/post-list"} style={activeClass} className='w-[50px] relative flex justify-center text-gray-700  dark:text-gray-300 border-b-3px rounded-md items-center text-[30px] h-[100%] '>
                     <div className='absolute 
                     rounded-full bg-red-600 right-[7px] top-2
                     h-[12px] w-[12px] '></div>
                 <IoHomeOutline />  
                 </NavLink>
-                <NavLink to={"/notification"} style={activeClass}  className='w-[50px] rounded-md border-b-3px  h-[100%]'>
+                <NavLink to={"/home/notification"} style={activeClass}  className='w-[50px] rounded-md border-b-3px  h-[100%]'>
                 <motion.div
                 animate={{
                     rotate: ["-15deg", "15deg", "-10deg", "10deg", "-5deg", "5deg", "0"]
@@ -360,10 +362,10 @@ const BlogItemsPage = () => {
                 <FaRegBell />  
                 </motion.div>
                 </NavLink>
-                <NavLink to={"/upload-post"} style={activeClass}  className='w-[65px] border-b-3px shadow-md bg-gray-200 flex justify-center items-center -mt-[28px] rounded-full text-[30px] h-[65px] text-gray-900 '>
+                <NavLink to={"/home/upload-post"} style={activeClass}  className='w-[65px] border-b-3px shadow-md bg-gray-200 flex justify-center items-center -mt-[28px] rounded-full text-[30px] h-[65px] text-gray-900 '>
                 <BsSend  />  
                 </NavLink>
-                <NavLink to={"/user-profile"} className='w-[50px] flex justify-center items-center text-[30px] h-[100%] '>
+                <NavLink to={"/home/user-profile"} className='w-[50px] flex justify-center items-center text-[30px] h-[100%] '>
                 <img className='w-[45px] h-[45px] border-2px border-green-600 object-contain img rounded-full' src={poster} alt="" />  
                 </NavLink>
                 <div 
@@ -371,7 +373,8 @@ const BlogItemsPage = () => {
                   <div className='w-[30px] transform transition-all duration-300 dark:bg-gray-100 shadow-lg translate-x-[-50%] dark:translate-x-[50%] bg-gray-800 h-[30px] rounded-full '></div>
                 </div>
             </motion.div>, document.getElementById("menu-root"))
-        }  
+        }
+        </div>
     </>
   )
 }

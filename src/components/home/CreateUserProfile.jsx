@@ -51,7 +51,7 @@ const CreateUserProfile = () => {
     }
 
     const checkInvalidInput = () => {
-        if (FirstNameRef.current.value && lastNameRef.current.value && bioRef.current.value && createUserInput.profile_image) {
+        if (FirstNameRef.current.value && lastNameRef.current.value && bioRef.current.value) {
             setisDisable(false)
             ButtonRef.current.classList.add("bg-blue-800")
             ButtonRef.current.classList.remove("bg-blue-400")
