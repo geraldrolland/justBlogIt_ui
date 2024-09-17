@@ -152,14 +152,13 @@ const UploadPage = () => {
     },
 
     onSuccess: (data) => {
-      navigateToHome("/")
+      navigateToHome("/home")
     },
 
     onError: (error) => {
       console.log(error)
     }
   })
-
   
   useEffect(() => {
     const userStatus = JSON.parse(sessionStorage.getItem("userStatus"))
@@ -175,7 +174,7 @@ const UploadPage = () => {
           <img ref={imageRef} className='w-[50px] object-contain h-[50px] rounded-full' src="" alt="" />
         </div>
         <input onChange={(e) => setPrevImage(e)} id='file' className='hidden' type="file" />
-        <img id='prevImage' src='' className='w-[300px] hidden  bg-cover mt-10 rounded-md h-[300px] border-1px mx-auto'/>
+        <img id='prevImage' src='' className='w-[300px] object-fill hidden  bg-cover mt-10 rounded-md h-[300px] border-1px mx-auto'/>
         <button onClick={() => {handleUploadImage()}} className='w-[120px] bg-gray-500 ml-[2.5%] mt-4 h-[35px]  dark:bg-gray-600 dark:text-gray-300 rounded-md text-gray-100 capitalize'>
           upload image
         </button>

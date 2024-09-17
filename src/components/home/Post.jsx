@@ -204,18 +204,16 @@ const Post = ({post}) => {
 
     const {data: comments, isPending, isError, refetch, isSuccess} = UseRequest("http://127.0.0.1:8000/posts/" + post.postId + "/get_comments/", "get", null, "comments/" + post.postId, false)
 
+
     
     const expandCommentBox = (e) => {
         if (e.key === "Enter") {
-            console.log("is enter")
             e.preventDefault()
           }
       
           if (e.target.scrollHeight < 250) {
-            console.log("this container height before scroll", e.target.style.height)
             e.target.style.height = "auto"
             e.target.style.height = e.target.scrollHeight + "px"
-            console.log("this is container height after scroll", e.target.style.height)
           }
     }
 
@@ -223,19 +221,12 @@ const Post = ({post}) => {
         commentBoxRef.current.classList.remove("hidden")
         commentBoxRef.current.classList.add("flex")
         commentInputRef.current.focus()
-
     }
-
 
     const postUserComment = useMutation({
         mutationFn: (() => postMutationFunc("http://127.0.0.1:8000/posts/" + post.postId + "/post_comment/", userComment)),
 
         onSuccess: (data) => {
-            if (!comments) {
-                comments = []
-            } 
-            comments.unshift(data)
-            setIsRender(!isRender)
             commentInputRef.current.classList.remove("bg-500-gray")
             commentInputRef.current.classList.add("bg-600-gray")
             commentInputRef.current.classList.disable = false
@@ -349,11 +340,9 @@ const Post = ({post}) => {
 
 
     useEffect(() => {
-         const printComment = async () => {
-            const comment_list = await comments
-            if (comment_list)
-                console.log("THIS IS COMMENT LIST AWAITED", comment_list)
-         }
+        if (isSuccess) {
+            setCommentList(comments)
+        }
         if (textBoxRef.current) {
             const str = textBoxRef.current.innerHTML
             if (str.length > 318) {
@@ -380,19 +369,32 @@ const Post = ({post}) => {
         const comment =  data.message
         if (comment.postId === post.postId) {
             console.log(comment)
-            console.log("This is the comment list", comments)
-            setCommentMsg(comment)
+            if  (commentList) {
+                let isItem = false
+                for (let com in commentList) {
+                    console.log(com)
+                    if  (com.commentId === comment.commentId) {
+                        isItem = true
+                        break
+                    }
+                }
+
+                if (isItem === false) {
+                    console.log(typeof(comment))
+                    setCommentList(prevComments => [comment, ...prevComments])
+                }
+            }
         } 
     }
 
     websocket.onclose = () => {
 
     }
-    printComment()
+
     return () => {
         websocket.close()
     }
-    }, [])
+    }, [comments])
 
   return (
     <div id={post.postId} className='w-[100%] transition-all duration-300 flex flex-col flex-wrap border-b-1px mb-4 rounded-lg'>
@@ -515,7 +517,7 @@ const Post = ({post}) => {
             </div>
             <div ref={commentContainerRef} className='w-[100%]  mb-4 mt-2  flex items-center flex-col flex-wrap justify-center'>
                 { isSuccess ?
-                comments?.map(comment => <Comment key={comment.commentId} comment={comment} />) : null
+                commentList?.map(comment => <Comment key={comment.commentId} comment={comment} />) : null
                 }
             </div>
         </div>

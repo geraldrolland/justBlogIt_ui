@@ -12,6 +12,7 @@ import NotificationPage from './components/home/NotificationPage'
 import UserProfile from './components/home/UserProfile'
 import EditUserProfile from './components/home/EditUserProfile'
 import CreateUserProfile from './components/home/CreateUserProfile'
+import LandingPage from './components/home/LandingPage'
 export const queryClient = new QueryClient()
 export const theme = createContext()
 function App() {
@@ -44,19 +45,21 @@ function App() {
      >
     
     <QueryClientProvider client={queryClient}>
-    <div className='body w-[100%] h-[100%]'>
+    <div className='body w-full h-full '>
       <Routes>
-        <Route path='/' element={<BlogItemsPage/>}>
+      <Route path='/' element={<LandingPage/>}/>
+        <Route path='home/' element={<BlogItemsPage/>}>
         <Route index element={<PostList/>} />
         <Route path='post-list/' element={<PostList/>} />
         <Route path="notification" element={<NotificationPage/>} />    
         <Route path="upload-post" element={<UploadPage/>} />
-        <Route path='/user-profile' element={<UserProfile/>} />
-        <Route path='/edit-userprofile' element={<EditUserProfile/>} />
+        <Route path='user-profile' element={<UserProfile/>} />
+        <Route path='edit-userprofile' element={<EditUserProfile/>} />
         </Route>
         <Route path='create-userprofile' element={<CreateUserProfile/>} />
         <Route path='sign-up' element={<SignUp/>} />
         <Route path='log-in' element={<LogIn/>} />
+
       </Routes>
       </div>
       </QueryClientProvider>

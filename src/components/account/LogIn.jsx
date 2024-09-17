@@ -48,15 +48,16 @@ const LogIn = () => {
                 console.log("navigat to home")
                 sessionStorage.removeItem("userProfileInfo")
                 sessionStorage.setItem("userStatus", JSON.stringify(userStatus))
-                navigateToHome("/")
+                navigateToHome("/home")
             } 
     
-            if (response.status === 404 || response.status === 401) {
-                setisDisable(false)
-                setIsWrongEmailOrPassword(true)
-            }
+
         }
         catch(error) {
+            if (error.response.status === 404 || error.response.status === 401) {
+                setIsWrongEmailOrPassword(true)
+                console.log("wrong email")
+            }
             setisDisable(false)
             console.log(error)
         }
@@ -127,7 +128,7 @@ const LogIn = () => {
                 <NavLink to={"/sign-up"} className=' w-[90px] h-[100%]  rounded-full flex justify-center items-center border-1px border-gray-800 capitalize font-semibold dark:border-gray-400 dark:text-gray-200 text-gray-700 '>sign up</NavLink>
             </div>
             { isWrongEmailOrPassword ?
-            <small className='text-red-600 w-[70%] left-[15%] border-1px flex justify-center items-center mt-2 mx-auto absolute'>Wrong email or password</small> : null
+            <small className='text-red-600 w-[70%] left-[15%] flex justify-center items-center mt-2 mx-auto absolute'>Wrong email or password</small> : null
             }
             <input ref={emailRef} maxLength={30} className='w-[100%] h-[45px] rounded-md border-1px dark:border-none border-gray-800 focus:outline-none pl-4 dark:border-gray-400 mt-8 dark:text-gray-800 text-[18px] text-gray-800' onChange={(e) => {
                 setIsWrongEmailOrPassword(false)

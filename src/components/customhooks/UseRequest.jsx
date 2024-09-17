@@ -39,7 +39,7 @@ const UseRequest = (url, method = "get", data = null, key = null, enabled = true
                             }
                         }
                     } catch (refreshError) {
-                        navigateToLogin("log-in")
+                        navigateToLogin("/log-in/")
                         throw new Error("Failed to refresh token.");
                     }
                 }
@@ -60,7 +60,7 @@ const UseRequest = (url, method = "get", data = null, key = null, enabled = true
             }
         },
         enabled,
-        refetchInterval: 5000,
+        refetchInterval: 1000,
     });
 
     return queryResult;
@@ -142,7 +142,7 @@ const UseRequest = (url, method = "get", data = null, key = null, enabled = true
             mutationFn: postFunc,
             onSuccess: () => {
                 if (key === "userprofileupdate") {
-                    navigateToUserProfile("/user-profile/")
+                    navigateToUserProfile("/home/user-profile/")
                 }
 
             }
