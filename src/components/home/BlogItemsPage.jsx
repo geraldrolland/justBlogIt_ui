@@ -272,7 +272,7 @@ const BlogItemsPage = () => {
                 </h1>
             </NavLink>
             <NavLink to={"/home/user-profile"} className='w-[70px] hidden  md:flex flex-col justify-center items-center h-[60px]  '>
-                <img  src={fetchUserProfile.isSuccess ? fetchUserProfile.data.profile_image : placeholder} className='lg:w-[30px] img flex md:border-2px md:border-green-400  justify-center items-center rounded-full relative  bg-cover h-[40px] w-[40px] lg:h-[30px]' />
+                <img  src={fetchUserProfile.isSuccess && fetchUserProfile?.data?.profile_image !== "" ? fetchUserProfile.data.profile_image : placeholder} className='lg:w-[30px] img flex md:border-2px md:border-green-400  justify-center items-center rounded-full relative  bg-cover h-[40px] w-[40px] lg:h-[30px]' />
                 <button  onClick={() => {
                     hideDisplaySearchResult()
                     setIshowProfile(!isShowProfile)
@@ -297,7 +297,7 @@ const BlogItemsPage = () => {
                 }}
                 className='fixed z-10 top-[80px] hidden lg:block right-[75px]  rounded-md  h-[250px] w-[250px]'>
                     <div className='w-[100%] h-[100px]  flex justify-between items-center'>
-                        <img id='profile_image' className='w-[90px] h-[90px] rounded-full shadow-lg  bg-cover ' src={fetchUserProfile.isSuccess ? fetchUserProfile.data.profile_image : placeholder} alt="" />
+                        <img id='profile_image' className='w-[90px] h-[90px] rounded-full shadow-lg  bg-cover ' src={fetchUserProfile.isSuccess && fetchUserProfile?.data?.profile_image !== "" ? fetchUserProfile.data.profile_image : placeholder} alt="" />
                         <div className='w-[140px] h-[90px] border-1px rounded-lg dark:text-gray-400  shadow-md  leading-tight text-[14px] p-1 text-wrap truncate tracking-tight'>
                             {fetchUserProfile.data.bio} 
                         </div>

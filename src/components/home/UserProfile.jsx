@@ -38,7 +38,7 @@ const UserProfile = () => {
         <div className='w-[100%] flex   mx-auto'>
             <div className='w-[100%] rounded-lg dark:bg-gray-600 bg-gray-100 h-[300px] '>
                 <div className='w-[100%] h-[70px]  flex justify-start space-x-2 items-center'>
-                    <img id='profile_image' className='w-[70px] h-[70px] border-1px rounded-full' src={isSuccess ? data.profile_image : placeholder} alt="" />
+                    <img id='profile_image' className='w-[70px] h-[70px] border-1px rounded-full' src={isSuccess && data?.profile_image !== "" ? data.profile_image : placeholder} alt="" />
                     <h1 className='text-gray-500 font-semibold capitalize -mt-5 dark:text-gray-300'>{isSuccess ? data.first_name + " " + data.last_name : null}</h1>
                 </div>
                 <div className='w-[80%] mx-auto h-[100px]  mt-4 space-x-4 items-center justify-center flex'>
