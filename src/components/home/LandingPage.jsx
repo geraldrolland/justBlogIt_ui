@@ -13,7 +13,7 @@ import { RiFacebookLine } from "react-icons/ri";
 import { CiTwitter } from "react-icons/ci";
 import { CiInstagram } from "react-icons/ci";
 import { RiLinkedinLine } from "react-icons/ri";
-import "../../styles/signUp.css"
+import "../../styles/SignUp.css"
 import { motion } from 'framer-motion';
 import { NavLink, useNavigate } from 'react-router-dom'
 const LandingPage = () => {
