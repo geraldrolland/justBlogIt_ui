@@ -1,6 +1,6 @@
 # JustBlogIt
 
-JustBlogIt is a modern, real-time blogging platform where users can create posts, follow/unfollow other users, and receive notifications on updates and interactions. The application features a clean and responsive front-end built with Vite, React, and Tailwind CSS, and a powerful back-end leveraging Django, MySQL, and Redis for handling web-sockets and real-time notifications.
+JustBlogIt is a modern, real-time blogging platform where users can create posts, follow other users, and receive notifications on updates and interactions. The application features a responsive front-end built with Vite, React, and Tailwind CSS, and a powerful back-end leveraging Django, MySQL, and Redis for handling web-sockets and real-time notifications.
 
 ## Table of Contents
 - [Features](#features)
@@ -11,8 +11,7 @@ JustBlogIt is a modern, real-time blogging platform where users can create posts
   - [Database and WebSocket Configuration](#database-and-websocket-configuration)
   - [Docker Setup](#docker-setup)
 - [Running the Application](#running-the-application)
-- [Contributing](#contributing)
-- [License](#license)
+- [commands and extras](#commands-and-extras)
 
 ## Features
 - **User Authentication**: Secure login and registration system.
@@ -49,7 +48,7 @@ JustBlogIt is a modern, real-time blogging platform where users can create posts
    git clone https://github.com/your-username/justblogit-ui.git
    cd justblogit-ui
 
-Install Front-End Dependencies:
+###Install Front-End Dependencies:
 
 ```bash
 
@@ -66,7 +65,10 @@ Preview the Production Build:
 
 ```bash
 npm run preview
-Back-End Setup
+```
+
+###Back-End Setup
+
 Clone the Back-End Repository:
 
 ```bash
@@ -77,7 +79,9 @@ Set Up a Python Virtual Environment:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-Install Back-End Dependencies:
+```
+
+###Install Back-End Dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -87,21 +91,29 @@ Ensure MySQL is running, and configure your settings.py with the correct MySQL c
 Then, run the following commands:
 
 ```bash
-python manage.py makemigrations
-python manage.py migrate
-Run the Django Development Server:
+py manage.py makemigrations
+py manage.py migrate
+
+
+###Run the Django Development Server:
 
 ```bash
-python manage.py runserver
+py manage.py runserver
+
+
 Database and WebSocket Configuration
 MySQL Installation and Setup: Install MySQL if it's not already installed:
 
 ```bash
 sudo apt install mysql-server
+
+
 Start MySQL:
 
 ```bash
 sudo systemctl start mysql
+
+
 Redis Installation and Setup: Install Redis for real-time functionality:
 
 ```bash
@@ -110,6 +122,8 @@ Start Redis:
 
 ```bash
 sudo systemctl start redis-server
+
+
 Docker Setup
 Docker Deployment: This project is configured to run using Docker. To deploy the application via Docker:
 
@@ -121,6 +135,8 @@ Stop Docker Containers:
 
 ```bash
 docker-compose down
+
+
 Running the Application
 Ensure MySQL and Redis are Running:
 
