@@ -7,6 +7,7 @@ import { GoEyeClosed } from "react-icons/go";
 import { NavLink } from 'react-router-dom';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import LogInLoader from '../home/LogInLoader';
 const LogIn = () => {
     const hide = useRef(null)
     const view = useRef(null)
@@ -14,6 +15,7 @@ const LogIn = () => {
     const emailRef = useRef(null)
     const navigateToHome = useNavigate()
     const ButtonRef = useRef(null)
+    const [isClicked, setIsClicked] = useState(false)
     const [isWrongEmailOrPassword, setIsWrongEmailOrPassword] = useState(false)
     const [isDisable, setisDisable] = useState(true)
 
@@ -39,6 +41,7 @@ const LogIn = () => {
 
     const LogInUser = async () => {
         setisDisable(true)
+        setIsClicked(true)
         try {
             console.log(logInPut)
             const response = await axios.post("http://127.0.0.1:8000/users/login_user/", logInPut)
@@ -59,13 +62,14 @@ const LogIn = () => {
                 console.log("wrong email")
             }
             setisDisable(false)
+            setIsClicked(false)
             console.log(error)
         }
 
     }
 
     const handleLogIn = () => {
-        if (logInPut.email !== "" && logInPut.password !== "") {
+        if (checkInvalidInput()) {
             LogInUser()
         }
     }
@@ -90,7 +94,7 @@ const LogIn = () => {
 
     useEffect(() => {
         emailRef.current.focus()
-        //checkInvalidInput()
+        checkInvalidInput()
     }, [])
 
   return (
@@ -152,8 +156,11 @@ const LogIn = () => {
                 }} className='w-[100%] h-[100%] rounded-md border-1px dark:border-none border-gray-800 focus:outline-none pl-4 dark:border-gray-400 dark:text-gray-800 text-gray-800 text-[18px]' type="text" placeholder='Password' />
             </div>
             <small className='block mt-2 dark:text-gray-200 text-gray-600'><sup>*</sup>must contain atleast 8 characters, 1 uppercase and 1 special character</small>
-            <button ref={ButtonRef} disabled={isDisable} onClick={() => handleLogIn()} className='w-[150px] h-[45px] dark:text-gray-300 font-semibold cursor-pointer  transition-all duration-200 mx-auto flex justify-center items-center mt-4 text-gray-200  rounded-full space-x-2 capitalize bg-blue-800 '>
-                <h1>login </h1><LiaSignInAltSolid className='text-[25px]' />
+            <button ref={ButtonRef} disabled={isDisable} onClick={() => handleLogIn()} className='w-[150px] h-[45px] dark:text-gray-300 font-semibold cursor-pointer transition-all duration-200 mx-auto flex justify-center items-center mt-4 text-gray-200  rounded-full space-x-2 capitalize bg-blue-800 '>
+                { isClicked ? <LogInLoader/> : 
+                <><h1>login </h1><LiaSignInAltSolid className='text-[25px]' /></>
+                }
+
             </button>
         </div>
     </div>

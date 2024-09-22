@@ -1,8 +1,15 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import React from 'react';
 import { queryClient } from '../../App';
 import { useNavigate } from 'react-router-dom';
+/**
+ *
+ * @param {string} url - the url paramenter provides the url of the api endpoint .
+ * @param {object} data - the data parameter is used to post data to the provided url if not null.
+ * @param {string} - the key parameter is used as an identifier for each query made to provided endpoint .
+ * @param {boolean} - the enable parameter provides conditional instances in which UseRequest either execute a fetch request onmount of given component or not
+ * @returns {object} - the useRequest hook return an object after execution which contains the response data from the provided endpoint
+ */
 const UseRequest = (url, method = "get", data = null, key = null, enabled = true) => {
     const navigateToLogin = useNavigate()
     if (method === "get" && data === null && key !== "") {

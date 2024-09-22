@@ -6,11 +6,9 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
 import "../../styles/SignUp.css"
 import placeholder from "../../assets/images/imageplaceholder.png"
+import LogInLoader from './LogInLoader';
 const CreateUserProfile = () => {
-    const hide = useRef(null)
-    const view = useRef(null)
-    const inputRef = useRef(null) 
-    const emailRef = useRef(null)
+    const [isClicked, setIsClicked] = useState(false)
     const navigateToLogIn = useNavigate()
     const navigateToSignUp = useNavigate()
     const ButtonRef = useRef(null)
@@ -28,6 +26,7 @@ const CreateUserProfile = () => {
 
     const createUserProfile = async () => {
         if (checkInvalidInput()) {
+            setIsClicked(true)
             const userProfileInfo = JSON.parse(sessionStorage.getItem("userProfileInfo"))
             const formData = {
                 "email": userProfileInfo.email,
@@ -40,10 +39,12 @@ const CreateUserProfile = () => {
             }
             axios.post("http://127.0.0.1:8000/users/create_user/", formData)
             .then((response) => {
+                setIsClicked(false)
                 setisDisable(false)
                 navigateToLogIn("/log-in/")
             })
             .catch(error => {
+                setIsClicked(false)
                 setisDisable(false)
                 console.log(error)
             })
@@ -151,7 +152,10 @@ const CreateUserProfile = () => {
                 value={createUserInput.bio}
                  placeholder='Bio' className='w-[100%] rounded-md tab-container resize-none text-[18px] mt-4 border-gray-800 text-gray-800 focus:outline-none pl-4 pt-2 h-[200px] border-1px' name="" id=""></textarea>
             <button ref={ButtonRef} disabled={isDisable} onClick={() => createUserProfile()} className='w-[180px] h-[45px] dark:text-gray-300 font-semibold cursor-pointer  transition-all duration-200 mx-auto flex justify-center items-center mt-2 text-gray-200  rounded-full space-x-2 capitalize bg-blue-400 '>
-                <h1>create profile </h1><LiaSignInAltSolid className='text-[25px]' />
+                { isClicked ? <LogInLoader/> :
+                    <><h1>create profile </h1><LiaSignInAltSolid className='text-[25px]' /></>
+                }
+                
             </button>
         </div>
     </div>
